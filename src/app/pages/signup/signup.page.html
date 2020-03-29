@@ -1,0 +1,91 @@
+<!-- <ion-header>
+  <ion-toolbar color="mango">
+    <ion-title>Registration</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+  
+<ion-content padding='true'>
+  <div class="center">    
+    <br>
+    <img src="assets/images/logo.png" class="smallLogoCreate"/>
+    <h1>Crear cuenta</h1>
+  </div>
+  <form (ngSubmit)="registro(fregistro)" #fregistro="ngForm">
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Nombres</ion-label>
+        <ion-input 
+              autocomplete="off" 
+              name="Nombres"
+              type="text" 
+              #Nombres_
+              [(ngModel)]="iClientes.Nombres"
+              required>
+        </ion-input>
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Apellidos</ion-label>
+        <ion-input 
+              autocomplete="off"
+              name="Apellidos"
+              #Apellidos_
+              [(ngModel)]="iClientes.Apellidos"
+              type="text"
+              required></ion-input>
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Genero</ion-label>
+        <ion-select 
+          value="-1" 
+          interface="action-sheet" 
+          cancelText="CANCELAR" 
+          name="Sexo" 
+          #Sexo_
+          [(ngModel)]="iClientes.Sexo"
+          required>
+          <ion-select-option value="1">Hombre</ion-select-option>
+          <ion-select-option value="2">Mujer</ion-select-option>
+        </ion-select>
+        <ion-icon name="people-outline" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Cumpleaños</ion-label>
+        <ion-datetime 
+          name="FechaCumpleanos"
+          #FechaCumpleanos_
+          [(ngModel)]="iClientes.FechaCumpleanos"
+          cancelText="Cancelar"
+          required></ion-datetime>
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Correo</ion-label>
+        <ion-input 
+            autocomplete="off" 
+            type="email"
+            name="Correo"
+            #Correo_
+            [(ngModel)]="iClientes.Correo"
+            required></ion-input>
+        <ion-icon name="at-outline" slot="start"></ion-icon>        
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input 
+            autocomplete="off" 
+            type="password"
+            name="Password"
+            #Password_
+            [(ngModel)]="iClientes.Password"
+            required></ion-input>
+        <ion-icon name="finger-print-outline" slot="start"></ion-icon>
+      </ion-item>
+      <ion-item lines='none' class="background-transparent">
+        Ya tienes una cuenta? &nbsp; <a routerLink='/login'>Ingresa</a>
+      </ion-item>
+    </ion-list>
+    <ion-button type="submit" expand="block" share="round" color="success" [disabled]="fregistro.invalid">Registrate</ion-button>
+  </form>
+</ion-content>

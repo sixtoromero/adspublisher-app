@@ -1,0 +1,46 @@
+<!-- <ion-header>
+  <ion-toolbar color="mango">
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content class="" padding='true'>
+  <div class="center">
+    <br>
+    <img src="assets/images/logo.png" class="smallLogo"/>
+    <ion-label class="text-color">
+      <h1>Iniciar sesión</h1>
+    </ion-label>
+  </div>
+  <form>    
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Correo</ion-label>
+        <ion-input autocomplete="off" type="email"></ion-input>
+        <ion-icon name="mail-outline" slot="start"></ion-icon>        
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input autocomplete="off" type="password"></ion-input>
+        <ion-icon name="key-outline" slot="start"></ion-icon>
+      </ion-item>      
+    </ion-list>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div class="ion-text-end">
+            <a routerLink='/signup'> Registrarse</a>
+          </div>          
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col center text-center>
+          <!-- <ion-button color="primary">Ingresar</ion-button> -->
+          <ion-button expand="block">Ingresar</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>    
+    <!-- <ion-button expand="block" share="round" color="success">Login</ion-button> -->
+    
+  </form>
+</ion-content>
