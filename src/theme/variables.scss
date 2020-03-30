@@ -85,8 +85,8 @@
 
   ion-tab-button.tab-selected {
     ion-icon, ion-label {
-      color: var(--ion-color-mango) !important;
-      --ion-color-base: var(--ion-color-mango) !important;
+      color: var(--ion-color-primary) !important;
+      --ion-color-base: var(--ion-color-primary) !important;
     }
   }
 }

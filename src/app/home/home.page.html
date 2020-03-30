@@ -1,15 +1,25 @@
-<ion-tabs>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <!-- <ion-button (click)="toggleMenu()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button> -->
+      <ion-menu-button color="primary"
+                      menu="mnuPublisher"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-tabs id="tabsmain">
 
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="feed">      
-      <!-- <ion-icon name="newspaper-outline"></ion-icon> -->
-      <ion-icon name="newspaper"></ion-icon>
-      <ion-label>Feed</ion-label>
+  <ion-tab-bar slot="bottom">    
+    <ion-tab-button tab="maps">
+      <ion-icon name="earth-outline"></ion-icon>
+      <ion-label>Ubicación</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="messages">
+    <ion-tab-button tab="microempresas">
       <ion-icon name="send"></ion-icon>
-      <ion-label>Messages</ion-label>
+      <ion-label>Microempresas</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="notifications">

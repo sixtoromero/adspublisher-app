@@ -12,16 +12,28 @@
       <h1>Iniciar sesión</h1>
     </ion-label>
   </div>
-  <form>    
+  <form (ngSubmit)="getLogin(flogin)" #flogin="ngForm">
     <ion-list>
       <ion-item>
         <ion-label position="floating">Correo</ion-label>
-        <ion-input autocomplete="off" type="email"></ion-input>
+        <ion-input 
+          autocomplete="off" 
+          type="email"
+          name="Correo"
+          #Correo_
+          [(ngModel)]="iClientes.Correo"
+          required></ion-input>
         <ion-icon name="mail-outline" slot="start"></ion-icon>        
       </ion-item>
       <ion-item>
         <ion-label position="floating">Contraseña</ion-label>
-        <ion-input autocomplete="off" type="password"></ion-input>
+        <ion-input 
+          autocomplete="off" 
+          type="password"
+          name="Password"
+          #Password_          
+          [(ngModel)]="iClientes.Password"
+          required></ion-input>
         <ion-icon name="key-outline" slot="start"></ion-icon>
       </ion-item>      
     </ion-list>
@@ -36,7 +48,7 @@
       <ion-row>
         <ion-col center text-center>
           <!-- <ion-button color="primary">Ingresar</ion-button> -->
-          <ion-button expand="block">Ingresar</ion-button>
+          <ion-button type="submit" expand="block" [disabled]="flogin.invalid">Ingresar</ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>    

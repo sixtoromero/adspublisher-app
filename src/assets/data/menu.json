@@ -1,0 +1,22 @@
+[
+    {
+        "icon": "business",
+        "name": "Mis Microempresas",
+        "redirectTo": "/listmicroempresas"
+    },
+    {
+        "icon": "chatbubbles",
+        "name": "PQRS",
+        "redirectTo": "/listpqrs"
+    },
+    {
+        "icon": "cash",
+        "name": "Historial de Pagos",
+        "redirectTo": "/listhistorialpagos"
+    },
+    {
+        "icon": "calendar",
+        "name": "Historial de Visitas",
+        "redirectTo": "/listhistorialpagos"
+    }
+]

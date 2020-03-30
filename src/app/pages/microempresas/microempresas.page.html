@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>microempresas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding='true'>
+  <form (ngSubmit)="registro(fregistro)" #fregistro="ngForm">
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Nombre Microempresa</ion-label>
+        <ion-input 
+              autocomplete="off"
+              name="Nombre"
+              type="text"
+              #Nombre_
+              [(ngModel)]="iMicroempresa.Nombre"
+              required>
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea 
+              name="Descripcion" 
+              #Descripcion_
+              [(ngModel)]="iMicroempresa.Descripcion"
+              clearOnEdit="true">
+        </ion-textarea>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

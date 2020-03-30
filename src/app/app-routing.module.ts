@@ -9,6 +9,14 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+  },
+  {
+    path: 'maps',
+    loadChildren: () => import('./pages/maps/maps.module').then( m => m.MapsPageModule)
+  },
+  {
+    path: 'microempresas',
+    loadChildren: () => import('./pages/microempresas/microempresas.module').then( m => m.MicroempresasPageModule)
   }
 ];
 @NgModule({

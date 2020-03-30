@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
+import { ComponentsModule } from './components/components.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ComponentsModule
   ],
   providers: [
     StatusBar,

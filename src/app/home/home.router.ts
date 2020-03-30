@@ -8,23 +8,23 @@ const routes: Routes = [
     component: HomePage,
     children: [
       {
-        path: 'feed',
+        path: 'maps',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../pages/feed/feed.module').then(m => m.FeedPageModule)
+              import('../pages/maps/maps.module').then(m => m.MapsPageModule)
           }
         ]
       },
       {
-        path: 'messages',
+        path: 'microempresas',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../pages/messages/messages.module').then(
-                m => m.MessagesPageModule
+              import('../pages/microempresas/microempresas.module').then(
+                m => m.MicroempresasPageModule
               )
           }
         ]
@@ -43,7 +43,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/home/feed',
+        redirectTo: '/home/maps',
         pathMatch: 'full'
       }
     ]
