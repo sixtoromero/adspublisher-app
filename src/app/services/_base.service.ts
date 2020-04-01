@@ -20,15 +20,15 @@ export abstract class BaseService<TModel, TMasterModel>{
             this._apiRootLocal = environment.apiGatewayURL;
     }
 
-    ApplicationAut(isAut:boolean){           
-        
+    ApplicationAut(isAut:boolean) {
+
         if (isAut){
             this.headers = new HttpHeaders({
                 'Access-Control-Allow-Origin': '*',
                 'Authorization': "bearer " + this.token
             });
 
-        }else{
+        } else {
             this.headers = new HttpHeaders({
                 'Access-Control-Allow-Origin': '*'
             });

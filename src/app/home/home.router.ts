@@ -23,8 +23,8 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../pages/microempresas/microempresas.module').then(
-                m => m.MicroempresasPageModule
+              import('../pages/microempresas/list/list.module').then(
+                m => m.ListPageModule
               )
           }
         ]

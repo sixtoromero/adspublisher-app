@@ -1,10 +1,17 @@
-<ion-header>
+<ion-header no-border>
   <ion-toolbar>
-    <ion-title>microempresas</ion-title>
+    <ion-buttons slot="start">      
+      <ion-menu-button color="primary"
+                       menu="mnuPublisher">
+      </ion-menu-button>
+    </ion-buttons>
+    <ion-title color="primary">Crear mi Microempresa</ion-title>
   </ion-toolbar>
 </ion-header>
+<ion-content padding>    
+</ion-content>
 
-<ion-content padding='true'>
+<ion-content>
   <form (ngSubmit)="registro(fregistro)" #fregistro="ngForm">
     <ion-list>
       <ion-item>

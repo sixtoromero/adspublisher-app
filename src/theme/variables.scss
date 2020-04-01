@@ -108,6 +108,10 @@
   height: 125px;
 }
 
+.imageBig {
+  height: 180px;
+}
+
 .center{
   text-align: center
 }
@@ -120,6 +124,18 @@ ion-list {
   --ion-background-color: transparent !important;
   --ion-border-color: green;
 }
+
+.list-trans {
+  --ion-background-color: transparent !important;
+  --ion-border-color: transparent !important;
+}
+
+/*
+ion-list {
+  --ion-background-color: transparent !important;
+  --ion-border-color: transparent !important;
+}
+*/
 
 ion-input.StyleInp {  
   font-size: 0.9em;

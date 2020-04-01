@@ -1,22 +1,26 @@
 [
     {
-        "icon": "business",
-        "name": "Mis Microempresas",
-        "redirectTo": "/listmicroempresas"
+        "icon": "settings",
+        "name": "Configuración",
+        "redirectTo": "/config",
+        "isvisible": true
     },
     {
         "icon": "chatbubbles",
         "name": "PQRS",
-        "redirectTo": "/listpqrs"
+        "redirectTo": "/listpqrs",
+        "isvisible": true
     },
     {
         "icon": "cash",
         "name": "Historial de Pagos",
-        "redirectTo": "/listhistorialpagos"
+        "redirectTo": "/listhistorialpagos",
+        "isvisible": true
     },
     {
         "icon": "calendar",
         "name": "Historial de Visitas",
-        "redirectTo": "/listhistorialpagos"
+        "redirectTo": "/listhistorialpagos",
+        "isvisible": true
     }
 ]

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Marker } from '../../models/marker.model';
+import { GeneralService } from '../../services/general.service';
 
 declare var google;
 
@@ -43,7 +44,7 @@ export class MapsPage implements OnInit {
     },
   ];
 
-  constructor() { }
+  constructor(gservice: GeneralService) { }
 
   ngOnInit() {
     this.loadMap();

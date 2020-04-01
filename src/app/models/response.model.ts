@@ -1,5 +1,5 @@
-export class MenuModel {
-    public icon: string;
-    public name: string;
-    public redirectTo: string;
+export class ResponseModel<T> {
+    public Data: T;
+    public IsSuccess: boolean;
+    public Message: string;
 }

@@ -1,15 +1,25 @@
 <ion-menu side="start" 
           menuId="mnuPublisher" 
-          contentId="iro" *ngIf="this.service.IsHideMenu">
+          contentId="iro" *ngIf="service.IsHideMenu">
   <ion-header>
     <ion-toolbar color="primary">
       <ion-title>ADS Publisher</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <ion-list>
+    <ion-list class="list-trans">
+      <ion-item>
+        <ion-avatar slot="start">          
+          <img [src]="service.avatar">
+        </ion-avatar>
+        <ion-label>
+          <h2>Finn</h2>
+          <h3>I'm a big deal</h3>          
+          <p>Listen, I've had a pretty messed up day...</p>
+        </ion-label>
+      </ion-item>
       <ion-menu-toggle *ngFor="let c of menuOpts | async" [routerLink]="c.redirectTo">
-        <ion-item>
+        <ion-item [routerLink]="c.redirectTo" *ngIf="c.isvisible">
           <ion-icon [name]="c.icon"
                     color="primary">
           </ion-icon>

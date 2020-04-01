@@ -13,7 +13,7 @@ export class MenuComponent implements OnInit {
 
   menuOpts: Observable<MenuModel[]>;
 
-  constructor(private service: GeneralService) { }
+  constructor(public service: GeneralService) { }
 
   ngOnInit() {
     this.menuOpts = this.service.getMenuOpts();

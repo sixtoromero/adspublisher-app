@@ -8,5 +8,6 @@ export class ClientesModel {
     public FechaCreacion: Date;
     public Activo: boolean;
     public Password: string;
+    public Foto: string;
     public Token: string;
 }

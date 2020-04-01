@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MicroempresasPageRoutingModule } from './microempresas-routing.module';
+import { ListPageRoutingModule } from './list-routing.module';
 
-import { MicroempresasPage } from './microempresas.page';
+import { ListPage } from './list.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MicroempresasPageRoutingModule
+    ListPageRoutingModule
   ],
-  declarations: [MicroempresasPage]
+  declarations: [ListPage]
 })
-export class MicroempresasPageModule {}
+export class ListPageModule {}

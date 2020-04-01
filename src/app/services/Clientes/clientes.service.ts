@@ -7,8 +7,7 @@ import { BaseService } from '../_base.service';
 import { ClientesModel } from 'src/app/models/clientes.model';
 import { MasterModel } from 'src/app/models/master.model';
 import { APIENDPOINT } from '../../config/configuration';
-
-import { Storage } from '@ionic/storage';
+import { GeneralService } from '../general.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,14 +17,14 @@ import { Storage } from '@ionic/storage';
     //private unsubscribe$ = new Subject<void>();
     private apiURL: string;
     token: string = null;
+    iCliente = new ClientesModel();
 
     constructor(protected http: HttpClient,
-                private storage: Storage) {
+                private gservice: GeneralService) {
 
       super(http, environment.apiGatewayURL);
       this.apiURL = environment.apiGatewayURL;
-
-    }    
+    }
 
     login(email: string , password: string) {
       
@@ -38,29 +37,27 @@ import { Storage } from '@ionic/storage';
         this.post(APIENDPOINT.getLogin, cliente)
         .subscribe(response => {
           if (response.IsSuccess) {
-            this.guardarToken(response.Data['Token']);
+            this.gservice.saveStorage('token', response.Data['Token']);
+
+            //this.saveStorage('Cliente', response.Data);
+            //console.log('Data', response["Data"]);
             //console.log('Respuesta', response);
-            resolve(true);
+            resolve(response.Data);
           } else {
             console.log('Error Controlado', response.Message);
             this.token = null;
-            this.storage.clear();
-            resolve(false);
+            this.gservice.clearStorage();
+            resolve(null);
 
           }
         }, error => {
           console.log('Error', error.error);
           this.token = null;
-          this.storage.clear();
-          resolve(false);
+          this.gservice.clearStorage();
+          resolve(null);
         });
       });
-    }
-
-    async guardarToken(token: string) {
-      this.token = token;
-      await this.storage.set('token', token);
-    }
+    }    
 
     getClientesByID(_token: string, IDCliente: number) {
 

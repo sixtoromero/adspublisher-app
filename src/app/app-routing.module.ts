@@ -13,12 +13,21 @@ const routes: Routes = [
   {
     path: 'maps',
     loadChildren: () => import('./pages/maps/maps.module').then( m => m.MapsPageModule)
+  },  
+  {
+    path: 'createmicroempresa',
+    loadChildren: () => import('./pages/microempresas/list/list.module').then( m => m.ListPageModule)
+  },  
+  {
+    path: 'listmicroempresa',
+    loadChildren: () => import('./pages/microempresas/create/create.module').then( m => m.CreatePageModule)
   },
   {
-    path: 'microempresas',
-    loadChildren: () => import('./pages/microempresas/microempresas.module').then( m => m.MicroempresasPageModule)
+    path: 'config',
+    loadChildren: () => import('./pages/config/config.module').then( m => m.ConfigPageModule)
   }
 ];
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
