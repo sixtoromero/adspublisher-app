@@ -33,8 +33,10 @@ export class CreatePage implements OnInit {
   }
   
   async getCoords() {
-    //const location = await this.geocodeAddress(this.geocoder, this.map);
     
+    this.map = null;
+    this.loadMap();
+
     this.geocodeAddress(this.geocoder, this.map).then(result => {
       console.log(result);
     }).catch(err => {
@@ -101,7 +103,9 @@ export class CreatePage implements OnInit {
 
       geocoder.geocode({'address': address}, function(results, status) {
         if (status === 'OK') {
+          
           resultsMap.setCenter(results[0].geometry.location);
+
           var marker = new google.maps.Marker({
             map: resultsMap,
             position: results[0].geometry.location
