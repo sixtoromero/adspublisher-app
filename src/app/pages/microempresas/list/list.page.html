@@ -6,16 +6,45 @@
       </ion-menu-button>
     </ion-buttons>
     <ion-title color="primary">Mis Microempresas</ion-title>
-    <ion-fab-button slot="end" size="small" color="primary">
+    <ion-fab-button slot="end" size="small" (click)="modalcreate()" color="primary">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
+  <ion-list *ngFor="let item of liMicroEmpresa">
     <ion-item>
-      
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ item.Nombre }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ item.Descripcion }}
+        </ion-card-content>      
+        <ion-footer>
+          <ion-row>
+            <ion-col center text-center>
+              <button>
+                <ion-icon name="thumbs-up"></ion-icon>
+                <div>1.5k Likes</div>
+              </button>
+            </ion-col>
+            <ion-col center text-center>
+              <button>
+                <ion-icon name="text"></ion-icon>
+                <div>4 Comments</div>
+              </button>
+            </ion-col>
+            <ion-col center text-center>
+              <button>
+                <ion-icon name="time"></ion-icon>
+                <div>11h ago</div>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-footer>
+      </ion-card>
     </ion-item>
   </ion-list>
 </ion-content>

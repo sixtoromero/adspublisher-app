@@ -8,6 +8,10 @@ import { ClientesModel } from 'src/app/models/clientes.model';
 import { MasterModel } from 'src/app/models/master.model';
 import { APIENDPOINT } from '../../config/configuration';
 import { GeneralService } from '../general.service';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { debug } from 'util';
+import { Storage } from '@ionic/storage';
+
 
 @Injectable({
     providedIn: 'root'
@@ -20,10 +24,13 @@ import { GeneralService } from '../general.service';
     iCliente = new ClientesModel();
 
     constructor(protected http: HttpClient,
-                private gservice: GeneralService) {
+                private gservice: GeneralService,
+                private fileTransfer: FileTransfer,
+                private storage: Storage) {
 
       super(http, environment.apiGatewayURL);
       this.apiURL = environment.apiGatewayURL;
+
     }
 
     login(email: string , password: string) {
@@ -42,6 +49,7 @@ import { GeneralService } from '../general.service';
             //this.saveStorage('Cliente', response.Data);
             //console.log('Data', response["Data"]);
             //console.log('Respuesta', response);
+
             resolve(response.Data);
           } else {
             console.log('Error Controlado', response.Message);
@@ -57,7 +65,7 @@ import { GeneralService } from '../general.service';
           resolve(null);
         });
       });
-    }    
+    }
 
     getClientesByID(_token: string, IDCliente: number) {
 
@@ -95,7 +103,4 @@ import { GeneralService } from '../general.service';
         });
       });
     }
-
-
-
   }

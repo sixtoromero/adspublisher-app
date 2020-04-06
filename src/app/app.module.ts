@@ -13,8 +13,9 @@ import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from './components/components.module';
 
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 //import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath  } from '@ionic-native/file-path/ngx';
 import { File  } from '@ionic-native/file/ngx';

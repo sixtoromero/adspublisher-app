@@ -9,7 +9,7 @@
     <ion-row>
       <ion-col>        
         <div class="center">          
-          <img [src]="gservice.avatar" class="imageBig"/>
+          <img [src]="gservice.avatar" alt="image" class="imageBig"/>
         </div>
       </ion-col>
     </ion-row>
@@ -21,7 +21,8 @@
             <ion-input name="INFO"
                       type="text"
                       [readonly]="true">
-                      Cambia tu imagen de perfil
+                      Cambia tu imagen de perfil 
+                      {{ iCliente | json }}
                     </ion-input>
           </ion-item>
         </ion-list>        

@@ -22,6 +22,8 @@ export abstract class BaseService<TModel, TMasterModel>{
 
     ApplicationAut(isAut:boolean) {
 
+        console.log('TOKEN ApplicationAut', this.token);
+
         if (isAut){
             this.headers = new HttpHeaders({
                 'Access-Control-Allow-Origin': '*',
@@ -114,7 +116,7 @@ export abstract class BaseService<TModel, TMasterModel>{
     }
 
     post(endPoint: string, object: TModel, token: string = ""): Observable<ResponseModel<TModel[]>> {
-        
+                
         if (token != "") {
             this.token = token;
             this.ApplicationAut(true);

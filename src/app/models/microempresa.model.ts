@@ -6,6 +6,7 @@ export class MicroEmpresaModel {
     public Fax: string;
     public Telefono: string;
     public Celular: string;
+    public Direccion: string;
     public Longitud: string;
     public Latitud: string;
     public FechaCreacion: Date;

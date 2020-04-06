@@ -15,11 +15,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/maps/maps.module').then( m => m.MapsPageModule)
   },  
   {
-    path: 'createmicroempresa',
+    //path: 'createmicroempresa',
+    path: 'list-microempresa',
     loadChildren: () => import('./pages/microempresas/list/list.module').then( m => m.ListPageModule)
   },  
   {
-    path: 'listmicroempresa',
+    //path: 'listmicroempresa',
+    path: 'create-microempresa',
     loadChildren: () => import('./pages/microempresas/create/create.module').then( m => m.CreatePageModule)
   },
   {
