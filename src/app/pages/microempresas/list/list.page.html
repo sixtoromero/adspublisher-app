@@ -13,38 +13,61 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list *ngFor="let item of liMicroEmpresa">
-    <ion-item>
+  <!-- <ion-list *ngFor="let item of liMicroEmpresa">
+    <ion-item class="list-trans">
       <ion-card>
         <ion-card-header>
           <ion-card-title>{{ item.Nombre }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           {{ item.Descripcion }}
-        </ion-card-content>      
-        <ion-footer>
-          <ion-row>
-            <ion-col center text-center>
-              <button>
-                <ion-icon name="thumbs-up"></ion-icon>
-                <div>1.5k Likes</div>
-              </button>
-            </ion-col>
-            <ion-col center text-center>
-              <button>
-                <ion-icon name="text"></ion-icon>
-                <div>4 Comments</div>
-              </button>
-            </ion-col>
-            <ion-col center text-center>
-              <button>
-                <ion-icon name="time"></ion-icon>
-                <div>11h ago</div>
-              </button>
-            </ion-col>
-          </ion-row>
-        </ion-footer>
+          <br>
+          <br>
+          <ion-label>Dirección: </ion-label>
+          {{ item.Direccion }}          
+          <ion-list>
+            <ion-item class="list-trans">              
+              <ion-button  color="danger" slot="end" >
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+              <ion-button  slot="end" >
+                <ion-icon name="expand-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+        
       </ion-card>
     </ion-item>
-  </ion-list>
+  </ion-list> -->
+<ion-list *ngFor="let item of liMicroEmpresa">
+  <ion-item class="list-trans">
+    <ion-card>    
+      <ion-card-header>
+        <ion-card-title>{{ item.Nombre }}</ion-card-title>
+      </ion-card-header>      
+      <ion-card-content>
+        {{ item.Descripcion }}
+        <br>
+        <br>
+        <strong>Dirección:</strong>
+        <br>
+        {{ item.Direccion }}          
+      </ion-card-content>    
+      <ion-footer>
+        <ion-row >
+          <ion-col>
+            <ion-button (click)="modalupdate(item.IDMicroEmpresa)">
+              <ion-icon name="expand-outline"></ion-icon>
+            </ion-button>
+            <ion-button color="danger" (click)="presentAlert(item.IDMicroEmpresa)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-col>          
+        </ion-row>
+      </ion-footer>
+    </ion-card>
+  </ion-item>
+</ion-list>
+  
 </ion-content>

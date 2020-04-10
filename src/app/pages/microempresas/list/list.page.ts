@@ -3,7 +3,9 @@ import { MicroEmpresaModel } from '../../../models/microempresa.model';
 import { GeneralService } from '../../../services/general.service';
 import { Marker } from '../../../models/marker.model';
 import { CreatePage } from '../create/create.page';
-import { ModalController } from '@ionic/angular';
+import { ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { ClientesModel } from '../../../models/clientes.model';
+import { MicroEmpresaService } from '../../../services/MicroEmpresas/microempresas.service';
 
 declare var google;
 
@@ -17,22 +19,28 @@ export class ListPage implements OnInit {
   iMicroEmpresa = new MicroEmpresaModel();
   liMicroEmpresa = new Array<MicroEmpresaModel>();
   IDCliente: number;
-  
-  map = null;
-  markers: Marker[];
+  iCliente = new ClientesModel();
+  loading: any;
 
   constructor(public gservice: GeneralService,
-              private modalCtrl: ModalController) { }
+              public service: MicroEmpresaService,
+              private loadinCtrl: LoadingController,
+              private modalCtrl: ModalController,
+              private alertCtrl: AlertController) { }
 
   async ngOnInit() {
     this.gservice.avatar = await this.gservice.getStorage('avatar');
+    this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
+
+    this.getInfoMicroEmpresa();
+
   }
 
   async modalcreate() {
     const modal = await this.modalCtrl.create({
       component: CreatePage,
       componentProps: {
-        title: 'Crear Referencia Personal',
+        title: 'Crear Microempresa',
         model: this.IDCliente
       }
     });
@@ -40,56 +48,118 @@ export class ListPage implements OnInit {
     await modal.present();
 
     const { data } = await modal.onDidDismiss();
+    
+    console.log('DATA', data);
+
+    if (data) {
+      if (data["ModalProcess"]) {
+        this.getInfoMicroEmpresa();
+      }
+    }
+  }
+
+  async modalupdate(IDMicroempresa: number) {
+        
+    const modal = await this.modalCtrl.create({
+      component: CreatePage,
+      componentProps: {
+        title: 'Actualizar Microempresa',
+        IDMicroEmpresa: IDMicroempresa
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    
+    if (data) {
+      if (data["ModalProcess"]) {
+        this.getInfoMicroEmpresa();
+      }
+    }
 
   }
 
-  getInfoMicroEmpresa() {
-    let marker: Marker;
 
-    marker = {
-        position: {
-          lat: 4.658383846282959,
-          lng: -74.09394073486328,
+  async getInfoMicroEmpresa() {
+    
+    let _token = await this.gservice.getStorage('token');
+
+    await this.presentLoading('Cargando lista de Microempresas.');
+    const result = await this.service.getInfoMicroEmpresa(_token, this.iCliente.IDCliente);
+    
+    this.liMicroEmpresa = result as Array<MicroEmpresaModel>;
+
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert("No se cargaron los registros, intente nuevamente");
+    }
+  }
+
+
+  async DeleteMicroEmpresa(IDMicroEmpresa: number) {
+    
+    let _token = await this.gservice.getStorage('token');
+
+    await this.presentLoading('Cargando lista de Microempresas.');
+    const result = await this.service.deletemicroempresa(IDMicroEmpresa, _token);
+
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert("Ha ocurrido un error al eliminar el registro.");
+    } else {
+      this.getInfoMicroEmpresa();
+    }
+  }
+
+  
+  async presentAlert(IDMicroEmpresa: number) {
+    const alert = await this.alertCtrl.create({
+      header: 'ADS Publisher',
+      subHeader: 'Eliminando registro',
+      message: '¿Desea eliminar el registro seleccionado?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Cancelar');
+          }
         },
-        title: 'Parque Simón Bolivar'
-      };
+        {
+            text: 'Aceptar',
+            handler: (blah) => {
+              //console.log('Botón OK');
+              this.DeleteMicroEmpresa(IDMicroEmpresa);
+          }
+        }
+      ]
+    });
 
-    this.markers.push(marker);
+    await alert.present();
+  }
+
+  async presentLoading(message: string) {
+    
+    this.loading = await this.loadinCtrl.create({
+      message
+    });
+
+    return this.loading.present();
 
   }
 
-  loadMap() {
-    // create a new map by passing HTMLElement
-    const mapEle: HTMLElement = document.getElementById('map');
-    // create LatLng object
-    const myLatLng = {lat: 4.658383846282959, lng: -74.09394073486328};
-    // create map
-    this.map = new google.maps.Map(mapEle, {
-      center: myLatLng,
-      zoom: 12
+  async showAlert(message: string) {
+
+    const alert = await this.alertCtrl.create({
+      header: 'ADS Publisher',
+      message,
+      buttons: ['Aceptar']
     });
 
-    google.maps.event.addListenerOnce(this.map, 'idle', () => {
-      //this.renderMarkers();
-      mapEle.classList.add('show-map');
-      this.renderMarkers();
-    });
+    await alert.present();
   }
-
-  renderMarkers() {
-    this.markers.forEach(marker => {
-      this.addMarker(marker);
-    });
-  }
-
-  addMarker(marker: Marker){
-    const mk = new google.maps.Marker({
-      position: marker.position,
-      map: this.map,
-      title: marker.title
-    });
-
-    return mk;
-  }
-
 }

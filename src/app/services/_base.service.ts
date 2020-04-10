@@ -23,7 +23,7 @@ export abstract class BaseService<TModel, TMasterModel>{
     ApplicationAut(isAut:boolean) {
 
         console.log('TOKEN ApplicationAut', this.token);
-
+        
         if (isAut){
             this.headers = new HttpHeaders({
                 'Access-Control-Allow-Origin': '*',
@@ -116,16 +116,19 @@ export abstract class BaseService<TModel, TMasterModel>{
     }
 
     post(endPoint: string, object: TModel, token: string = ""): Observable<ResponseModel<TModel[]>> {
-                
+        
         if (token != "") {
             this.token = token;
             this.ApplicationAut(true);
         }
+
         const apiURL = `${this._apiRoot}${endPoint}`;
+        
         return this._httpClient.post(apiURL, object, { headers: this.headers })
         .pipe(
             map(
                 (resp: ResponseModel<TModel>) => {
+                
                 this.responseModel.Data = resp.Data;
                 this.responseModel.IsSuccess = resp.IsSuccess;
                 this.responseModel.Message = resp.Message;
@@ -134,7 +137,13 @@ export abstract class BaseService<TModel, TMasterModel>{
             }));
     }
 
-    update(endPoint: string, object: TModel): Observable<ResponseModel<TModel>> {
+    update(endPoint: string, object: TModel, token: string): Observable<ResponseModel<TModel>> {
+        
+        if (token != "") {
+            this.token = token;
+            this.ApplicationAut(true);
+        }
+
         const apiURL = `${this._apiRoot}${endPoint}`;
         
         return this._httpClient.post(apiURL, object, { headers: this.headers })
@@ -170,5 +179,41 @@ export abstract class BaseService<TModel, TMasterModel>{
         return JSON.stringify(object);
     }
 
+    delete(endPoint: string, ID: number, token: string = ""): Observable<ResponseModel<TModel[]>> {
+        
+        if (token != "") {
+            this.token = token;
+            this.ApplicationAut(true);
+        }
+
+        const apiURL = `${this._apiRoot}${endPoint}`;
+        
+        /*
+        const options = {
+            headers: this.headers,
+            body: {
+              ID
+            }
+          }*/
+
+        const options = {
+            headers: this.headers
+          }
+
+          //`${this.baseUrl}/${id}`
+
+        //return this._httpClient.delete(apiURL + "/" + ID, options)
+        return this._httpClient.delete(`${apiURL}/${ID}`, options)
+        .pipe(
+            map(
+                (resp: ResponseModel<TModel>) => {
+                
+                this.responseModel.Data = resp.Data;
+                this.responseModel.IsSuccess = resp.IsSuccess;
+                this.responseModel.Message = resp.Message;
+
+                return this.responseModel;
+            }));
+    }
 
 }
