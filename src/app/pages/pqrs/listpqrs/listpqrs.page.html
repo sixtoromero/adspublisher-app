@@ -1,0 +1,59 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="start">      
+      <ion-menu-button color="primary"
+                       menu="mnuPublisher">
+      </ion-menu-button>
+    </ion-buttons>
+    <ion-title color="primary">Mis PQRS</ion-title>
+    <ion-fab-button slot="end" size="small" (click)="modalcreate()" color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list class="list-trans">
+    <ion-item>   
+      <ion-card>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <strong>Tipo de petición:</strong>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                Petición
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <strong>
+                  Asunto:
+                </strong>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                No se muestra mi dirección en el mapa de la App.
+              </ion-col>
+            </ion-row>        
+          </ion-grid>
+        </ion-card-content>
+        <ion-footer>
+          <ion-row >
+            <ion-col>
+              <ion-button (click)="modalupdate(1)">
+                <ion-icon name="expand-outline"></ion-icon>
+              </ion-button>
+              <ion-button color="danger" (click)="presentAlert(1)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-col>          
+          </ion-row>
+        </ion-footer>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -122,7 +122,15 @@ ion-content {
 
 ion-list {
   --ion-background-color: transparent !important;
-  --ion-border-color: green;
+  --ion-border-color: green;  
+}
+
+// margin-left: -20px!important;
+
+.ion-item-line{
+  width: 100% !important;
+  height: 100%;
+  margin-left: 0px!important;
 }
 
 .list-trans {

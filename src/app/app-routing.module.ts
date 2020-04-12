@@ -27,6 +27,14 @@ const routes: Routes = [
   {
     path: 'config',
     loadChildren: () => import('./pages/config/config.module').then( m => m.ConfigPageModule)
+  },
+  {
+    path: 'createpqrs',
+    loadChildren: () => import('./pages/pqrs/createpqrs/createpqrs.module').then( m => m.CreatepqrsPageModule)
+  },
+  {
+    path: 'listpqrs',
+    loadChildren: () => import('./pages/pqrs/listpqrs/listpqrs.module').then( m => m.ListpqrsPageModule)
   }
 ];
 

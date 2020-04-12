@@ -7,5 +7,15 @@ export const APIENDPOINT = {
     UpdateMicroEmpresa: 'api/MicroEmpresas/UpdateAsync',
     DeleteMicroEmpresa: 'api/MicroEmpresas/DeleteAsync',
     getMicroEmpresa: 'api/MicroEmpresas/GetAsync',
-    getInfoMicroEmpresa: 'api/MicroEmpresas/GetAllAsync'
+    getInfoMicroEmpresa: 'api/MicroEmpresas/GetAllAsync',
+    Insertpqrs: 'api/PQRS/InsertAsync',
+    Updatepqrs: 'api/PQRS/UpdateAsync',
+    Deletepqrs: 'api/PQRS/DeleteAsync',
+    GetallpqrsByID: 'api/PQRS/GetAllAsync',
+    GetpqrsByID: 'api/PQRS/GetAsync',
+    InsertParametros: 'api/Parametros/InsertAsync',
+    UpdateParametros: 'api/Parametros/UpdateAsync',
+    DeleteParametros: 'api/Parametros/DeleteAsync',
+    GetallParametrosByID: 'api/Parametros/GetAllAsync',
+    GetParametrosByID: 'api/Parametros/GetAsync'
 }

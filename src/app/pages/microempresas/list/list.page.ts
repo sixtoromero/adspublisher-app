@@ -35,6 +35,7 @@ export class ListPage implements OnInit {
     this.getInfoMicroEmpresa();
 
   }
+  
 
   async modalcreate() {
     const modal = await this.modalCtrl.create({

@@ -30,13 +30,13 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'notifications',
+        path: 'pqrs',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../pages/notifications/notifications.module').then(
-                m => m.NotificationsPageModule
+              import('../pages/pqrs/listpqrs/listpqrs.module').then(
+                m => m.ListpqrsPageModule
               )
           }
         ]
