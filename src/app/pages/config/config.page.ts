@@ -31,7 +31,6 @@ export class ConfigPage implements OnInit {
   }
 
   async ngOnInit() {
-    console.log('RESULTADO:', this.gservice.avatar);
     if (!this.gservice.avatar) {
       this.gservice.avatar = await this.gservice.getStorage('avatar');
       this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;

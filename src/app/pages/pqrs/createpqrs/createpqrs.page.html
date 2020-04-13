@@ -7,8 +7,14 @@
   <form (ngSubmit)="register(fReg)" #fReg="ngForm">
     <ion-list>
       <ion-item>
-        <ion-select name="IDTipoPeticion" #IDParametro [(ngModel)]="iPQRS.IDParametro" placeholder="--seleccionar--" required>
-          <ion-select-option  value="item.IDParametro" style="width: 100%;" *ngFor="let item of liParametros">{{ item.Descripcion }}</ion-select-option>
+        <ion-select 
+              name="IDTipoPeticion" 
+              #IDParametro 
+              [(ngModel)]="iPQRS.IDParametro" 
+              placeholder="--seleccionar--"
+              [selectedText]="DescripcionTipo"
+              required>
+          <ion-select-option  *ngFor="let item of liParametros" value="{{item.IDParametro}}" style="width: 100%;">{{ item.Descripcion }}</ion-select-option>
         </ion-select>
         <ion-icon name="list-outline" slot="start"></ion-icon>
       </ion-item>

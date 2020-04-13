@@ -6,6 +6,8 @@ import { GeneralService } from 'src/app/services/general.service';
 import { ParametrosService } from 'src/app/services/Parametros/parametros.service';
 import { PQRSService } from '../../../services/pqrs/pqrs.service';
 import { ParametrosModel } from '../../../models/parametros.model';
+import { DescriptiondynamicService } from '../../../services/descriptiondynamic/descriptiondynamic.service';
+import { DescriptionDynamicModel } from 'src/app/models/descriptiondynamic.model';
 
 @Component({
   selector: 'app-createpqrs',
@@ -16,22 +18,28 @@ export class CreatepqrsPage implements OnInit {
 
   iPQRS = new PQRSModel();
   liParametros = new Array<ParametrosModel>();
-  loading: any;  
+  loading: any;
   @Input() IDPQRS: number = 0;
   token: string;
+  DescripcionTipo: string;
 
   constructor(private modalCtrl: ModalController,
     private loadinCtrl: LoadingController,
     private alertCtrl: AlertController,
     public gservice: GeneralService,
     private pservice: ParametrosService,
-    private service: PQRSService) { }
+    private service: PQRSService,
+    private dservice: DescriptiondynamicService) { }
 
   async ngOnInit() {
     
     this.token = await this.gservice.getStorage('token');
-    this.getInfoParametros();
+    await this.getInfoParametros();
 
+    if (this.IDPQRS > 0) {
+      await this.getInfoPQRSByID();
+      await this.GetDescriptionDyn();
+    }
   }
 
   async register(freg: NgForm) {
@@ -39,6 +47,7 @@ export class CreatepqrsPage implements OnInit {
     if (freg.valid) {
       
       this.presentLoading('Por favor espere.');
+      this.iPQRS.IDCliente = await this.gservice.getStorage('IDCliente');
       
       if (this.IDPQRS == 0) {
         this.iPQRS.IDPQRS = 0;
@@ -48,7 +57,7 @@ export class CreatepqrsPage implements OnInit {
         valid = await this.service.updatePQRS(this.iPQRS, this.token);
       }
       
-      if (valid == true) {
+      if (valid === true) {
         freg.reset();
         
         this.loading.dismiss();
@@ -56,7 +65,6 @@ export class CreatepqrsPage implements OnInit {
         this.modalCtrl.dismiss({
           ModalProcess: true
         });
-        //this.showAlert('Bienvenido. Se le ha notificado en su correo los pasos a seguir con el proceso.');
       } else {
         this.showAlert('Ha ocurrido un inconveniente por favor intente nuevamente.');
       }
@@ -79,6 +87,43 @@ export class CreatepqrsPage implements OnInit {
     }
 
     console.log('Data', this.liParametros);
+  }
+
+  async getInfoPQRSByID() {
+
+    await this.presentLoading('Cargando lista de Tipos de Petición.');
+    const result = await this.service.GetPQRS(this.token, this.IDPQRS);
+
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert("No se cargaron los registros, intente nuevamente");
+    } else {
+      this.iPQRS = result as PQRSModel;
+    }
+  }
+
+  async GetDescriptionDyn() {
+
+
+    let iDescDyn = new DescriptionDynamicModel();
+    
+
+    iDescDyn.TableName = 'Parametros';
+    iDescDyn.GetFieldName = 'Descripcion';
+    iDescDyn.Filter = 'IDParametro';
+    iDescDyn.Value = this.iPQRS.IDParametro;
+
+    await this.presentLoading('Cargando lista de Tipos de Petición.');
+    const result = await this.dservice.GetDescriptionDyn(iDescDyn, this.token);
+
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert('No se cargaron los registros, intente nuevamente');
+    } else {
+      this.DescripcionTipo = result['Data'];
+    }
   }
 
   async presentLoading(message: string) {

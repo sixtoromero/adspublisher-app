@@ -19,6 +19,7 @@ export class ListpqrsPage implements OnInit {
 
   iPQRS = new PQRSModel();
   liParametros = new Array<ParametrosModel>();
+  liPQRS = new Array<PQRSModel>();
 
   loading: any;
 
@@ -26,14 +27,34 @@ export class ListpqrsPage implements OnInit {
               private loadinCtrl: LoadingController,
               private alertCtrl: AlertController,
               public gservice: GeneralService,
-              public service: ParametrosService) { }
+              public pservice: ParametrosService,
+              public service: PQRSService) { }
 
-  ngOnInit() {
-    //this.getInfoParametros();
+  async ngOnInit() {
+    //this.getInfoParametros();    
+    this.IDCliente = await this.gservice.getStorage('IDCliente');
+    this.getInfoPQRS();
+
   }
 
   async register(freg: NgForm) {
+    this.getInfoPQRS();
+  }
+
+  async getInfoPQRS() {
     
+    let _token = await this.gservice.getStorage('token');
+
+    await this.presentLoading('Cargando lista de PQRS.');
+    const result = await this.service.getInfopqrs(_token, this.IDCliente);
+    
+    this.liPQRS = result as Array<PQRSModel>;
+
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert("No se cargaron los registros, intente nuevamente");
+    }
   }
 
   async modalcreate() {
@@ -54,7 +75,7 @@ export class ListpqrsPage implements OnInit {
 
     if (data) {
       if (data["ModalProcess"]) {
-        //this.getInfoMicroEmpresa();
+        this.getInfoPQRS();
       }
     }
   }
@@ -64,7 +85,7 @@ export class ListpqrsPage implements OnInit {
       component: CreatepqrsPage,
       componentProps: {
         title: 'Actualizar PQRS',
-        IDPQRS
+        IDPQRS: IDPQRS
       }
     });
 
@@ -74,7 +95,7 @@ export class ListpqrsPage implements OnInit {
     
     if (data) {
       if (data["ModalProcess"]) {
-        //this.getPQRS();
+        this.getInfoPQRS();
       }
     }
   }
@@ -105,13 +126,13 @@ export class ListpqrsPage implements OnInit {
     await alert.present();
   }
 
-  async DeleteParametro(ID: number) {
+  async DeletePQRS(ID: number) {
     
     let _token = await this.gservice.getStorage('token');
 
     await this.presentLoading('Cargando lista de Microempresas.');
-    const result = await this.service.DeleteParametros(ID, _token);
-
+    const result = await this.service.DeletePQRS(ID, _token);
+    
     this.loading.dismiss();
 
     if (result == null) {
@@ -120,16 +141,6 @@ export class ListpqrsPage implements OnInit {
       this.getInfoPQRS();
     }
   }
-
-  async getInfoPQRS() {
-
-  }
-
-  async DeletePQRS(ID: number) {
-
-  }
-
-  
 
   async presentLoading(message: string) {
     

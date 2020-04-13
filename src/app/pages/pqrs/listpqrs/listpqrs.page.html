@@ -13,8 +13,8 @@
 </ion-header>
 <ion-content>
   <ion-list class="list-trans">
-    <ion-item>   
-      <ion-card>
+    <ion-item *ngFor="let item of liPQRS">
+      <ion-card style="width: 100%;">
         <ion-card-content>
           <ion-grid>
             <ion-row>
@@ -24,7 +24,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                Petición
+                {{ item.TipoPeticion }}
               </ion-col>
             </ion-row>
             <ion-row>
@@ -36,7 +36,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                No se muestra mi dirección en el mapa de la App.
+                {{ item.Asunto }}
               </ion-col>
             </ion-row>        
           </ion-grid>
@@ -44,7 +44,7 @@
         <ion-footer>
           <ion-row >
             <ion-col>
-              <ion-button (click)="modalupdate(1)">
+              <ion-button (click)="modalupdate(item.IDPQRS)">
                 <ion-icon name="expand-outline"></ion-icon>
               </ion-button>
               <ion-button color="danger" (click)="presentAlert(1)">

@@ -58,7 +58,7 @@ import { FileUploadAPIModel } from '../../models/fileuploadapi.model';
             this.apiURL = `${this._apiRoot}${APIENDPOINT.fileUpload}`;
       
             this.apiURL = `${this._apiRoot}${APIENDPOINT.fileUpload}`;
-            console.log('URL', this.apiURL);
+            //console.log('URL', this.apiURL);
       
             //this.token = await this.gservice.getStorage('token');
             

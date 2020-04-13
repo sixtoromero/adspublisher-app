@@ -22,9 +22,7 @@ export abstract class BaseService<TModel, TMasterModel>{
 
     ApplicationAut(isAut:boolean) {
 
-        console.log('TOKEN ApplicationAut', this.token);
-        
-        if (isAut){
+        if (isAut) {
             this.headers = new HttpHeaders({
                 'Access-Control-Allow-Origin': '*',
                 'Authorization': "bearer " + this.token

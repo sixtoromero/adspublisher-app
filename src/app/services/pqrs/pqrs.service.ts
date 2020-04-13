@@ -37,7 +37,7 @@ import { PQRSModel } from '../../models/pqrs.model';
             resolve(false);
           }
         }, error => {
-          console.log('Error', error.error);
+          console.log('Error PQRS', error.error);
           resolve(false);
         });
       });
@@ -84,8 +84,7 @@ import { PQRSModel } from '../../models/pqrs.model';
     getInfopqrs(_token: string, IDCliente: number) {
 
       return new Promise( resolve => {
-
-        this.get(APIENDPOINT.GetallpqrsByID + "?IDCliente=" + IDCliente, true, _token)
+        this.get(APIENDPOINT.GetallpqrsByID + "?ID=" + IDCliente, true, _token)
           .subscribe(resp => {
             if (resp.IsSuccess) {
               resolve(resp.Data);
@@ -105,7 +104,7 @@ import { PQRSModel } from '../../models/pqrs.model';
 
       return new Promise( resolve => {
 
-        this.get(APIENDPOINT.GetpqrsByID + "?IDPQRS=" + IDPQRS, true, _token)
+        this.get(APIENDPOINT.GetpqrsByID + "?ID=" + IDPQRS, true, _token)
           .subscribe(resp => {
             if (resp.IsSuccess) {
               resolve(resp.Data);

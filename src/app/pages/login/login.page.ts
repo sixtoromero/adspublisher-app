@@ -47,7 +47,10 @@ export class LoginPage implements OnInit {
         //navegar al tabs
         //this.navCtrl.navigateRoot(['home'], { animated: true});
         this.iCliente = result as ClientesModel;
+        
         this.oGeneral.saveStorage('InfoCliente', this.iCliente);
+        this.oGeneral.saveStorage('IDCliente', this.iCliente.IDCliente);
+
         this.oGeneral.IsHideMenu = true;
         this.oGeneral.avatar = environment.imageURL + this.iCliente.Foto;
 

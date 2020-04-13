@@ -5,4 +5,5 @@ export class PQRSModel {
     public Descripcion: string;
     public IDCliente: number;
     public FechaCreacion: Date;
+    public TipoPeticion: string;
 }

@@ -64,8 +64,8 @@ export class CreatePage implements OnInit {
       
       this.iMicroempresa.Latitud = localization[0];
       this.iMicroempresa.Longitud = localization[1];
-
-      console.log(result);
+      
+      //console.log(result);
       
     }).catch(err => {
       console.log(err);
