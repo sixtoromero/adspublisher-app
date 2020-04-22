@@ -18,5 +18,8 @@ export const APIENDPOINT = {
     DeleteParametros: 'api/Parametros/DeleteAsync',
     GetallParametrosByID: 'api/Parametros/GetAllAsync',
     GetParametrosByID: 'api/Parametros/GetAsync',
-    getDescription: 'api/DescriptionDynamic/GetDescription'
+    getDescription: 'api/DescriptionDynamic/GetDescription',
+    getFacturaByID: 'api/Facturas/GetAllAsync',
+    UpdateFactura: 'api/Facturas/UpdateAsync',
+    getPlanes: 'api/Planes/GetAllAsync'
 }

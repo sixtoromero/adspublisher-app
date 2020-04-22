@@ -133,6 +133,14 @@ ion-list {
   margin-left: 0px!important;
 }
 
+.col-align-right {
+  text-align: right;
+}
+
+ion-button {
+  text-transform: none;
+}
+
 .list-trans {
   --ion-background-color: transparent !important;
   --ion-border-color: transparent !important;

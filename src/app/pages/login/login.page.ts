@@ -6,6 +6,8 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GeneralService } from '../../services/general.service';
 import { environment } from 'src/environments/environment';
+import { FacturasService } from 'src/app/services/Facturas/facturas.service';
+import { FacturasModel } from '../../models/facturas.model';
 
 @Component({
   selector: 'app-login',
@@ -16,14 +18,16 @@ export class LoginPage implements OnInit {
 
   iClientes = new ClientesModel();
   iCliente = new ClientesModel();
-  //loading: any;
+  loading: any;
+  liFactura = new Array<FacturasModel>();
   
   constructor(private service: ClientesService,
+    private fservice: FacturasService,
     private router: Router,
     private loadinCtrl: LoadingController,
     private alertCtrl: AlertController,
     private navCtrl: NavController,
-    private oGeneral: GeneralService) {
+    private gservice: GeneralService) {
   }
 
   ngOnInit() {
@@ -48,21 +52,60 @@ export class LoginPage implements OnInit {
         //this.navCtrl.navigateRoot(['home'], { animated: true});
         this.iCliente = result as ClientesModel;
         
-        this.oGeneral.saveStorage('InfoCliente', this.iCliente);
-        this.oGeneral.saveStorage('IDCliente', this.iCliente.IDCliente);
+        this.gservice.saveStorage('InfoCliente', this.iCliente);
+        this.gservice.saveStorage('IDCliente', this.iCliente.IDCliente);
 
-        this.oGeneral.IsHideMenu = true;
-        this.oGeneral.avatar = environment.imageURL + this.iCliente.Foto;
+        this.gservice.IsHideMenu = true;
+        this.gservice.avatar = environment.imageURL + this.iCliente.Foto;
 
-        console.log('avatar', this.oGeneral.avatar);
-        this.oGeneral.saveStorage('avatar', this.oGeneral.avatar);
-
-        this.router.navigate(['home']);
+        console.log('avatar', this.gservice.avatar);
+        this.gservice.saveStorage('avatar', this.gservice.avatar);
+        
+        this.getPlan();
         //this.navCtrl.navigateRoot(['home']);
       } else {
         this.showAlert('Usuario o contraseña incorrectos.');
       }
     }
+  }
+
+  async getPlan() {
+    //Validando Planes.
+
+    let token = await this.gservice.getStorage('token');
+    //await this.presentLoading('Cargando plan.');
+    //const fresult = await this.fservice.GetFacturasByCliente(token, this.iCliente.IDCliente);    
+    this.fservice.GetFacturasByCliente(token, this.iCliente.IDCliente).then(fresult => {
+
+      this.liFactura = fresult as Array<FacturasModel>;
+
+      if (this.liFactura != null) {
+        if (this.liFactura.length > 0) {
+          this.gservice.setStorage('IDPlan', this.liFactura[0].IDPlan);
+          this.gservice.setStorage('Factura', this.liFactura);
+        } else {
+          this.gservice.setStorage('IDPlan', 1);
+          this.gservice.setStorage('Factura', null);
+        }
+      } else {
+        this.gservice.setStorage('IDPlan', 1);
+        this.gservice.setStorage('Factura', null);
+      }
+
+      this.router.navigate(['home']);
+
+    });
+    
+  }
+
+  async presentLoading(message: string) {
+    
+    this.loading = await this.loadinCtrl.create({
+      message
+    });
+
+    return this.loading.present();
+
   }
 
   async showAlert(message: string) {

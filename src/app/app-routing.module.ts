@@ -35,6 +35,10 @@ const routes: Routes = [
   {
     path: 'listpqrs',
     loadChildren: () => import('./pages/pqrs/listpqrs/listpqrs.module').then( m => m.ListpqrsPageModule)
+  },
+  {
+    path: 'planes',
+    loadChildren: () => import('./pages/planes/planes.module').then( m => m.PlanesPageModule)
   }
 ];
 

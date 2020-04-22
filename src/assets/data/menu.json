@@ -1,16 +1,22 @@
 [
     {
+        "icon": "home",
+        "name": "Inicio",
+        "redirectTo": "/home",
+        "isvisible": true
+    },
+    {
         "icon": "settings",
         "name": "Configuración",
         "redirectTo": "/config",
         "isvisible": true
     },
-    {
-        "icon": "chatbubbles",
-        "name": "PQRS",
-        "redirectTo": "/listpqrs",
+    {        
+        "icon": "logo-buffer",
+        "name": "Planes",
+        "redirectTo": "/planes",
         "isvisible": true
-    },
+    },    
     {
         "icon": "cash",
         "name": "Historial de Pagos",

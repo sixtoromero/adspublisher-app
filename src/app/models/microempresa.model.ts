@@ -10,4 +10,5 @@ export class MicroEmpresaModel {
     public Longitud: string;
     public Latitud: string;
     public FechaCreacion: Date;
+    public IDPlan: number;
 }

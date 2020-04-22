@@ -6,6 +6,8 @@ import { MicroEmpresaService } from '../../../services/MicroEmpresas/microempres
 import { GeneralService } from '../../../services/general.service';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { ClientesModel } from '../../../models/clientes.model';
+import { FacturasService } from 'src/app/services/Facturas/facturas.service';
+import { FacturasModel } from 'src/app/models/facturas.model';
 
 declare var google;
 
@@ -23,15 +25,22 @@ export class CreatePage implements OnInit {
   iCliente = new ClientesModel();
   Nomenclatura: string;
   map = null;
-  loading: any;
-  geocoder = new google.maps.Geocoder();
-  token: string;
   
+  loading: any;
+  //Nota: Descomentar la línea de google.maps.Geocoder(); y quitar la any
+  //geocoder = new google.maps.Geocoder();
+  geocoder: any;
+  //===============================================================
+
+  token: string;
+  liFactura = new Array<FacturasModel>();
+
   marker: Marker;
   miputavariable: string;
 
   constructor(private service: MicroEmpresaService,
         public gservice: GeneralService,
+        private fservice: FacturasService,
         private loadinCtrl: LoadingController,
         private modalCtrl: ModalController,
         private alertCtrl: AlertController) { }
@@ -43,7 +52,21 @@ export class CreatePage implements OnInit {
     
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
     this.iMicroempresa.IDCliente = this.iCliente.IDCliente;
+    
+    this.iMicroempresa.Latitud = '21.15282000';
+    this.iMicroempresa.Longitud = '-7.0012451';
+    
     this.loadMap();
+
+    this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
+    
+    if (this.liFactura === null) {
+      this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
+    } else {
+      if (this.liFactura.length === 0) {
+        this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
+      }
+    }
 
     if (this.IDMicroEmpresa > 0) {
       this.getMicroEmpresa();
@@ -51,6 +74,25 @@ export class CreatePage implements OnInit {
 
   }
   
+
+  async getPlan() {
+    //Validando Planes.
+    let token = await this.gservice.getStorage('token');
+    await this.presentLoading('Cargando plan.');
+    const fresult = await this.fservice.GetFacturasByCliente(token, this.iCliente.IDCliente);
+    
+    this.liFactura = fresult as Array<FacturasModel>;
+    
+    //NOTA IMPORTANTE: Cuando no encuentre ningún registro se debe generar una factura con el Plan 1 (Básico)
+    if (this.liFactura.length > 0) {
+      this.gservice.setStorage('IDPlan', this.liFactura[0].IDPlan);
+      this.gservice.setStorage('Factura', this.liFactura);
+    } else {
+      this.gservice.setStorage('IDPlan', 1);
+      this.gservice.setStorage('Factura', null);
+    }
+  }
+
   async getCoords() {
     
     this.map = null;
@@ -135,8 +177,10 @@ export class CreatePage implements OnInit {
       if (valid == true) {
         freg.reset();
         this.map = null;
-        this.loadMap();
         
+        //Nota: Por favor descomentar a this.loadMap();
+        //this.loadMap();
+
         this.loading.dismiss();
 
         this.modalCtrl.dismiss({
@@ -162,7 +206,7 @@ export class CreatePage implements OnInit {
     this.loading.dismiss();
 
     if (result == null) {
-      this.showAlert("No se cargaron los registros, intente nuevamente");
+      this.showAlert('No se cargaron los registros, intente nuevamente');
     } else {
       this.getCoords();
     }
@@ -199,11 +243,11 @@ export class CreatePage implements OnInit {
       let Latitud = 0;
       let Longitud = 0;
     
-      let address = this.iMicroempresa.Direccion + " Medellín, Antioquia";
+      let address = this.iMicroempresa.Direccion + ' Medellín, Antioquia';
 
       var promise = new Promise(function(resolve, reject) {
 
-      geocoder.geocode({'address': address}, function(results, status) {
+      geocoder.geocode({ 'address': address}, function(results, status) {
         if (status === 'OK') {
           
           resultsMap.setCenter(results[0].geometry.location);
@@ -214,10 +258,7 @@ export class CreatePage implements OnInit {
           });
   
           Latitud = results[0].geometry.location.lat();
-          Longitud = results[0].geometry.location.lng();
-          
-          // console.log('Latitud', Latitud);
-          // console.log('Longitud', Longitud);
+          Longitud = results[0].geometry.location.lng();                  
 
           let localization: string;
           localization = Latitud.toString() + '|' + Longitud.toString();

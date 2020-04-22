@@ -39,6 +39,10 @@ import { Storage } from '@ionic/storage';
       return await this.storage.get(name);
     }
 
+    async setStorage(name: string, value: any) {
+      return await this.storage.set(name, value);
+    }
+
     async clearStorage(){
       await this.storage.clear();
     }

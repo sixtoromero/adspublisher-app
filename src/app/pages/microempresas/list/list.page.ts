@@ -21,6 +21,7 @@ export class ListPage implements OnInit {
   IDCliente: number;
   iCliente = new ClientesModel();
   loading: any;
+  IsActivate: boolean;
 
   constructor(public gservice: GeneralService,
               public service: MicroEmpresaService,
@@ -88,15 +89,52 @@ export class ListPage implements OnInit {
 
     await this.presentLoading('Cargando lista de Microempresas.');
     const result = await this.service.getInfoMicroEmpresa(_token, this.iCliente.IDCliente);
-    
-    this.liMicroEmpresa = result as Array<MicroEmpresaModel>;
+        
 
     this.loading.dismiss();
 
     if (result == null) {
       this.showAlert("No se cargaron los registros, intente nuevamente");
+    } else {
+      
+      this.liMicroEmpresa = result as Array<MicroEmpresaModel>;
+
+      if (this.liMicroEmpresa.length > 0) {
+        switch(this.liMicroEmpresa[0].IDPlan) {
+          case 1:
+          case 2: {
+             this.IsActivate = true;
+             break;
+          }
+          case 3: {
+            if (this.liMicroEmpresa.length === 3) {
+              this.IsActivate = true;
+            } else {
+              this.IsActivate = false;
+            }
+            break;
+         }
+         case 4: {
+          if (this.liMicroEmpresa.length === 5) {
+            this.IsActivate = true;
+          } else {
+            this.IsActivate = false;
+          }
+          break;
+       }
+       }
+      }
     }
+
+    // else {
+    //   if (this.liMicroEmpresa.length === 0) {
+    //     this.gservice.setStorage('IDPlan', 1);
+    //   } else {
+    //     //Consultando Planes
+    //   }
+    // }
   }
+
 
 
   async DeleteMicroEmpresa(IDMicroEmpresa: number) {
@@ -109,7 +147,7 @@ export class ListPage implements OnInit {
     this.loading.dismiss();
 
     if (result == null) {
-      this.showAlert("Ha ocurrido un error al eliminar el registro.");
+      this.showAlert('Ha ocurrido un error al eliminar el registro.');
     } else {
       this.getInfoMicroEmpresa();
     }
