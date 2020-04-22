@@ -156,4 +156,8 @@ export class PlanesPage implements OnInit {
     await alert.present();
   }
 
+  /*
+    NOTA: Importante se debe crear la página de historial de pago para efectuar el mismo. Validar como se va a pagar.
+  */
+
 }

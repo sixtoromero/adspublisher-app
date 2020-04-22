@@ -19,7 +19,7 @@ declare var google;
 export class CreatePage implements OnInit {
 
   //@Input() IDCliente: number;
-  @Input() IDMicroEmpresa: number = 0;
+  @Input() IDMicroEmpresa: number;
 
   iMicroempresa = new MicroEmpresaModel();
   iCliente = new ClientesModel();
@@ -27,10 +27,8 @@ export class CreatePage implements OnInit {
   map = null;
   
   loading: any;
-  //Nota: Descomentar la línea de google.maps.Geocoder(); y quitar la any
-  //geocoder = new google.maps.Geocoder();
-  geocoder: any;
-  //===============================================================
+
+  geocoder = new google.maps.Geocoder();
 
   token: string;
   liFactura = new Array<FacturasModel>();
@@ -47,19 +45,19 @@ export class CreatePage implements OnInit {
 
   async ngOnInit() {
     //console.log('IDClientes en Crear', this.IDCliente);
-    
+    this.IDMicroEmpresa = 0;
     this.token = await this.gservice.getStorage('token');
     
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
     this.iMicroempresa.IDCliente = this.iCliente.IDCliente;
     
-    this.iMicroempresa.Latitud = '21.15282000';
-    this.iMicroempresa.Longitud = '-7.0012451';
-    
+    // this.iMicroempresa.Latitud = '21.15282000';
+    // this.iMicroempresa.Longitud = '-7.0012451';
+
     this.loadMap();
 
     this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
-    
+
     if (this.liFactura === null) {
       this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
     } else {
@@ -73,17 +71,16 @@ export class CreatePage implements OnInit {
     }
 
   }
-  
+
 
   async getPlan() {
     //Validando Planes.
     let token = await this.gservice.getStorage('token');
     await this.presentLoading('Cargando plan.');
     const fresult = await this.fservice.GetFacturasByCliente(token, this.iCliente.IDCliente);
-    
+
     this.liFactura = fresult as Array<FacturasModel>;
-    
-    //NOTA IMPORTANTE: Cuando no encuentre ningún registro se debe generar una factura con el Plan 1 (Básico)
+
     if (this.liFactura.length > 0) {
       this.gservice.setStorage('IDPlan', this.liFactura[0].IDPlan);
       this.gservice.setStorage('Factura', this.liFactura);
@@ -94,7 +91,7 @@ export class CreatePage implements OnInit {
   }
 
   async getCoords() {
-    
+
     this.map = null;
     this.loadMap();
 
@@ -103,12 +100,12 @@ export class CreatePage implements OnInit {
       let resp: string;
       resp = result as string;
       let localization = resp.split('|', 2);
-      
+
       this.iMicroempresa.Latitud = localization[0];
       this.iMicroempresa.Longitud = localization[1];
-      
+
       //console.log(result);
-      
+
     }).catch(err => {
       console.log(err);
     });
@@ -177,9 +174,8 @@ export class CreatePage implements OnInit {
       if (valid == true) {
         freg.reset();
         this.map = null;
-        
-        //Nota: Por favor descomentar a this.loadMap();
-        //this.loadMap();
+                
+        this.loadMap();
 
         this.loading.dismiss();
 
