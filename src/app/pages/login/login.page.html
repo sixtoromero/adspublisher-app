@@ -11,6 +11,7 @@
     <ion-label class="text-color">
       <h1>Iniciar sesión</h1>
     </ion-label>
+    <ion-title>v1.0</ion-title>
   </div>
   <form (ngSubmit)="getLogin(flogin)" #flogin="ngForm">
     <ion-list>
@@ -48,11 +49,10 @@
       <ion-row>
         <ion-col center text-center>
           <!-- <ion-button color="primary">Ingresar</ion-button> -->
-          <ion-button type="submit" expand="block" [disabled]="flogin.invalid">Ingresar</ion-button>
+          <ion-button type="submit" expand="block" [disabled]="flogin.invalid">Ingresar</ion-button>                    
         </ion-col>
       </ion-row>
     </ion-grid>    
-    <!-- <ion-button expand="block" share="round" color="success">Login</ion-button> -->
-    
+    <!-- <ion-button expand="block" share="round" color="success">Login</ion-button> -->    
   </form>
 </ion-content>

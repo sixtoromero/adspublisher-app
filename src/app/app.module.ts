@@ -22,6 +22,9 @@ import { File  } from '@ionic-native/file/ngx';
 
 import { Camera } from '@ionic-native/camera/ngx';
 
+import { PayPal } from '@ionic-native/paypal/ngx';
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -41,6 +44,7 @@ import { Camera } from '@ionic-native/camera/ngx';
     FilePath,
     File,
     Camera,
+    PayPal,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

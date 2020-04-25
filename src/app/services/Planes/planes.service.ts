@@ -25,6 +25,24 @@ import { PlanModel } from '../../models/plan.model';
           this.apiURL = environment.apiGatewayURL;
     }
 
+    GetPlan(token: string, ID: number) {
+      return new Promise( resolve => {
+        this.get(APIENDPOINT.getPlan + '?ID=' + ID, true, token)
+          .subscribe(resp => {
+            if (resp.IsSuccess) {
+              resolve(resp.Data);
+            } else {
+              resolve(null);
+              console.log('Mostrar alerta de error');
+            }
+          }, error => {
+            resolve(null);
+            console.log('Mostrar alerta de error');
+            return null;
+          });
+      });
+    }
+
     GetPlanes(token: string) {
         return new Promise( resolve => {
           this.get(APIENDPOINT.getPlanes, true, token)

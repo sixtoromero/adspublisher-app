@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Paypal - Plan
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>  
+  <ion-list>
+    <ion-item class="list-trans">
+      <ion-card style="width: 100%;">
+        <ion-img src="/assets/images/paypal.png"></ion-img>
+        <ion-card-header>
+          <ion-card-subtitle>Descripción del servicio</ion-card-subtitle>
+          <ion-card-title>
+            {{ iPlan.Titulo }}
+          </ion-card-title>          
+          <ion-row>
+            <ion-col>
+              <ul>
+                <li *ngFor="let i of iPlan.ADetalle">{{ i.Descripcion }}</li>
+              </ul>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <strong>Total a pagar: </strong>              
+            </ion-col>            
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label class="my-label">
+                {{ iPlan.Precio | currency }}  USD
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-button expand="full" color="primary" (click)="payWithPaypal()">Pagar con PayPal</ion-button>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>  
+</ion-content>

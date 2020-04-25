@@ -11,7 +11,7 @@
         "redirectTo": "/config",
         "isvisible": true
     },
-    {        
+    {
         "icon": "logo-buffer",
         "name": "Planes",
         "redirectTo": "/planes",
@@ -20,7 +20,7 @@
     {
         "icon": "cash",
         "name": "Historial de Pagos",
-        "redirectTo": "/listhistorialpagos",
+        "redirectTo": "/historialpagoslist",
         "isvisible": true
     },
     {

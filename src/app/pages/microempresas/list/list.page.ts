@@ -61,7 +61,9 @@ export class ListPage implements OnInit {
   }
 
   async modalupdate(IDMicroempresa: number) {
-        
+    
+    console.log('IDMicroempresa', IDMicroempresa);
+
     const modal = await this.modalCtrl.create({
       component: CreatePage,
       componentProps: {

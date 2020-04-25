@@ -39,6 +39,14 @@ const routes: Routes = [
   {
     path: 'planes',
     loadChildren: () => import('./pages/planes/planes.module').then( m => m.PlanesPageModule)
+  },
+  {
+    path: 'historialpagoslist',
+    loadChildren: () => import('./pages/historialpagos/list/list.module').then( m => m.ListPageModule)
+  },
+  {
+    path: 'historialpagoscreate',
+    loadChildren: () => import('./pages/historialpagos/create/create.module').then( m => m.CreatePageModule)
   }
 ];
 

@@ -19,7 +19,7 @@ declare var google;
 export class CreatePage implements OnInit {
 
   //@Input() IDCliente: number;
-  @Input() IDMicroEmpresa: number;
+  @Input() IDMicroEmpresa: number = 0;
 
   iMicroempresa = new MicroEmpresaModel();
   iCliente = new ClientesModel();
@@ -45,7 +45,7 @@ export class CreatePage implements OnInit {
 
   async ngOnInit() {
     //console.log('IDClientes en Crear', this.IDCliente);
-    this.IDMicroEmpresa = 0;
+    //this.IDMicroEmpresa = 0;
     this.token = await this.gservice.getStorage('token');
     
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;

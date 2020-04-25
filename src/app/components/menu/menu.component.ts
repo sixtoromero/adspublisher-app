@@ -15,9 +15,11 @@ export class MenuComponent implements OnInit {
 
   constructor(public service: GeneralService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    
     this.menuOpts = this.service.getMenuOpts();
-    this.service.IsHideMenu = false;
+    const IsHideMenu = await this.service.getStorage('IsHideMenu');
+    this.service.IsHideMenu = IsHideMenu;
   }
 
 }
