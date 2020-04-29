@@ -10,4 +10,8 @@ export class ClientesModel {
     public Password: string;
     public Foto: string;
     public Token: string;
+    public IDFactura: number;
+
+    public IDMicroempresa: number;
+    public IDPlan: number;
 }

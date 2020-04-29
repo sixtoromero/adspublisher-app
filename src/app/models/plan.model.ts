@@ -8,6 +8,7 @@ export class PlanModel {
     public Detalle: string;
     public FechaCreacion: Date;
     public Estado: boolean;
+    public NroMeses: number;
 
     public ADetalle: GeneralModel[];
     public Seleccionado: boolean;

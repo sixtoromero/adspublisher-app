@@ -103,4 +103,21 @@ import { Storage } from '@ionic/storage';
         });
       });
     }
+
+    sendMail(cli: ClientesModel, token: string) {
+      return new Promise(resolve => {
+        this.post(APIENDPOINT.SendMail, cli, token)
+        .subscribe(response => {
+          if (response.IsSuccess) {
+            resolve(true);
+          } else {
+            console.log('Error Controlado', response.Message);
+            resolve(false);
+          }
+        }, error => {
+          console.log('Error', error.error);
+          resolve(false);
+        });
+      });
+    }
   }

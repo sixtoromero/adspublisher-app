@@ -1,6 +1,7 @@
 export const APIENDPOINT = {
     getClientesByID: 'api/Clientes/GetAsync',
     Insert: 'api/Clientes/InsertAsync',
+    SendMail: 'api/Clientes/SendMailAsync',
     getLogin: 'api/Clientes/GetLoginAsync',
     fileUpload: 'api/Clientes/FileUpload',
     InsertMicroEmpresa: 'api/MicroEmpresas/InsertAsync',
@@ -22,5 +23,6 @@ export const APIENDPOINT = {
     getFacturaByID: 'api/Facturas/GetAllAsync',
     UpdateFactura: 'api/Facturas/UpdateAsync',
     getPlanes: 'api/Planes/GetAllAsync',
-    getPlan: 'api/Planes/GetAsync'
+    getPlan: 'api/Planes/GetAsync',
+    insertHistorialPagos: 'api/HistorialPagos/InsertAsync'
 }

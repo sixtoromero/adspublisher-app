@@ -45,6 +45,8 @@ export class LoginPage implements OnInit {
     this.gservice.IsHideMenu = false;
     await this.gservice.setStorage('IsHideMenu', false);
 
+    
+
   }
 
   async getLogin(freg: NgForm) {
@@ -97,6 +99,7 @@ export class LoginPage implements OnInit {
         if (this.liFactura.length > 0) {
           
           IDPlan = this.liFactura[0].IDPlan;
+          this.iCliente.IDFactura = this.liFactura[0].IDFactura;
 
           this.gservice.setStorage('IDPlan', this.liFactura[0].IDPlan);
           this.gservice.setStorage('Factura', this.liFactura);
@@ -104,11 +107,13 @@ export class LoginPage implements OnInit {
           IDPlan = 1;
           this.gservice.setStorage('IDPlan', 1);
           this.gservice.setStorage('Factura', null);
+          this.iCliente.IDFactura = 0;
         }
       } else {
         IDPlan = 1;
         this.gservice.setStorage('IDPlan', 1);
         this.gservice.setStorage('Factura', null);
+        this.iCliente.IDFactura = 0;
       }
 
       this.pservice.GetPlan(token, IDPlan).then(presult => {
