@@ -61,4 +61,22 @@ import { FacturasModel } from '../../models/facturas.model';
             });
         });
       }
+
+      GetFacturasByIDCliente(token: string, IDCliente: number) {
+        return new Promise( resolve => {
+          this.get(APIENDPOINT.getFacturaByIDCliente + '?ID=' + IDCliente, true, token)
+            .subscribe(resp => {
+              if (resp.IsSuccess) {
+                resolve(resp.Data);
+              } else {
+                resolve(null);
+                console.log('Mostrar alerta de error');
+              }
+            }, error => {
+              resolve(null);
+              console.log('Mostrar alerta de error');
+              return null;
+            });
+        });
+      }
   }

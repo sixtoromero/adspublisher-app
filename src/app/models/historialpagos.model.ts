@@ -5,5 +5,10 @@ export class HistorialPagosModel {
     public FechaCreacion: Date;
     public FechaCulminacion: Date;
     public Estado: boolean;
+
+    public IDPlan: number;
+    public Titulo: string;
+    public Descripcion: string;
+    public Precio: number;
     public NroMeses: number;
 }

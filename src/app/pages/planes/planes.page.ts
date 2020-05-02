@@ -5,7 +5,13 @@ import { PlanesService } from '../../services/Planes/planes.service';
 import { LoadingController, ModalController, AlertController } from '@ionic/angular';
 import { GeneralModel } from '../../models/general.model';
 import { FacturasService } from 'src/app/services/Facturas/facturas.service';
+
+
 import { FacturasModel } from '../../models/facturas.model';
+import { Router } from '@angular/router';
+import { HistorialPagosService } from 'src/app/services/historialpagos/historialpagos.service';
+import { HistorialPagosModel } from 'src/app/models/historialpagos.model';
+import { ClientesModel } from 'src/app/models/clientes.model';
 
 @Component({
   selector: 'app-planes',
@@ -17,11 +23,18 @@ export class PlanesPage implements OnInit {
   liPlanes = new Array<PlanModel>();
   loading: any;
   IDPlan: number;
+  liFactura = new Array<FacturasModel>();
   iFactura = new FacturasModel();
+  liHistorialPagos = new Array<HistorialPagosModel>();
+  iCliente = new ClientesModel();
+  IsPlan: boolean;
+  token: string;
 
   constructor(public gservice: GeneralService,
               public service: PlanesService,
               public fservice: FacturasService,
+              private hservice: HistorialPagosService,
+              private router: Router,
               private loadinCtrl: LoadingController,
               private modalCtrl: ModalController,
               private alertCtrl: AlertController) { }
@@ -29,7 +42,14 @@ export class PlanesPage implements OnInit {
   async ngOnInit() {
     this.gservice.avatar = await this.gservice.getStorage('avatar');
     this.IDPlan = await this.gservice.getStorage('IDPlan');
-    this.getPlanes();
+    this.IsPlan = false;
+    this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
+
+    this.token = await this.gservice.getStorage('token');
+
+    this.getHistorialPago();
+    
+
   }
 
   async getPlanes() {
@@ -66,13 +86,11 @@ export class PlanesPage implements OnInit {
             item.ADetalle.push(iDet);
           });
         });
-
-        console.log('LISTA', this.liPlanes);
       }
     }
   }
 
-  async SetPlan(IDPlan: number, ValorPlan: number) {
+  async SetPlan(IDPlan: number, ValorPlan: number, IsPayPal: boolean = false) {
 
     let valid: any;
 
@@ -102,6 +120,19 @@ export class PlanesPage implements OnInit {
         }
       });
 
+      this.fservice.GetFacturasByCliente(token, IDCliente).then(fresult => {
+        this.liFactura = fresult as Array<FacturasModel>;
+        console.log('FACTURA', this.liFactura);
+        if (this.liFactura != null) {
+          if (this.liFactura.length > 0) {
+            this.gservice.setStorage('Factura', this.liFactura);
+
+            if (IsPayPal) {
+              this.router.navigate(['historialpagoslist']);
+            }
+          }
+        }
+      });
     } else {
       this.showAlert('Ha ocurrido un inconveniente por favor intente nuevamente.');
     }
@@ -141,13 +172,13 @@ export class PlanesPage implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
-            console.log('Cancelar');
+            //console.log('Cancelar');
           }
         },
         {
             text: 'Aceptar',
             handler: (blah) => {
-              this.SetPlan(IDPlan, ValorPlan);
+              this.SetPlan(IDPlan, ValorPlan, true);
           }
         }
       ]
@@ -156,8 +187,25 @@ export class PlanesPage implements OnInit {
     await alert.present();
   }
 
-  /*
-    NOTA: Importante se debe crear la página de historial de pago para efectuar el mismo. Validar como se va a pagar.
-  */
+  async getHistorialPago() {
+    await this.presentLoading('Cargando historial de pagos.');
+    const result = await this.hservice.getHistorialPago(this.token, this.iCliente.IDCliente);
+    this.loading.dismiss();
+    
+    this.getPlanes();
+
+    if (result == null) {
+      //this.showAlert('No se cargaron los registros, intente nuevamente');
+      this.IsPlan = false;
+    } else {
+      this.liHistorialPagos = result as Array<HistorialPagosModel>;
+      if (this.liHistorialPagos.length > 0) {
+        this.showAlert('Ya tiene un pago realizado con el plan ' + this.liHistorialPagos[0].Titulo);
+        this.IsPlan = true;
+      } else {
+        this.IsPlan = false;
+      }
+    }
+  }
 
 }

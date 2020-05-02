@@ -21,8 +21,10 @@ export const APIENDPOINT = {
     GetParametrosByID: 'api/Parametros/GetAsync',
     getDescription: 'api/DescriptionDynamic/GetDescription',
     getFacturaByID: 'api/Facturas/GetAllAsync',
+    getFacturaByIDCliente: 'api/Facturas/GetAsync',
     UpdateFactura: 'api/Facturas/UpdateAsync',
     getPlanes: 'api/Planes/GetAllAsync',
     getPlan: 'api/Planes/GetAsync',
-    insertHistorialPagos: 'api/HistorialPagos/InsertAsync'
+    insertHistorialPagos: 'api/HistorialPagos/InsertAsync',
+    getHistorialPagos: 'api/HistorialPagos/GetAllAsync'
 }

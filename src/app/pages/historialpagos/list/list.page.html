@@ -8,8 +8,43 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content>  
-  <ion-list>
+<ion-content>
+  <ion-list *ngIf="!IsPayPal">
+    <ion-item *ngFor="let item of liHistorialPagos" class="list-trans">    
+      <!-- <ion-icon slot="start" name="cash"></ion-icon> -->
+      <ion-grid style="width: 100%;">
+        <ion-row>
+          <ion-col>
+            <strong>Plan: </strong> <br>
+            {{ item.Titulo }}
+          </ion-col>
+          <ion-col>
+            <strong>Descripción: </strong> <br>
+            {{ item.Descripcion }}
+          </ion-col>
+        </ion-row>        
+        <ion-row>
+          <ion-col>
+            <strong>Fecha Inicio: </strong> <br>
+            {{ item.FechaCreacion | date: 'dd/MM/yyyy' }}
+          </ion-col>
+          <ion-col>
+            <strong>Fecha Fin: </strong> <br>
+            {{ item.FechaCulminacion | date: 'dd/MM/yyyy' }}
+          </ion-col>          
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <strong>Precio:</strong> <br>
+            {{ item.Valor_Pago | currency }} USD
+          </ion-col>          
+        </ion-row>
+      </ion-grid>
+      <br>     
+      <!-- <hr style="border-top: 1px solid red;"/> -->
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="IsPayPal">
     <ion-item class="list-trans">
       <ion-card style="width: 100%;">
         <ion-img src="/assets/images/paypal.png"></ion-img>

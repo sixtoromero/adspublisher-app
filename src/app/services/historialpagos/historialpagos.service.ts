@@ -62,4 +62,22 @@ import { HistorialPagosModel } from '../../models/historialpagos.model';
             });
         });
       }
+
+      getHistorialPago(token: string, ID: number) {
+        return new Promise( resolve => {
+          this.get(APIENDPOINT.getHistorialPagos + '?ID=' + ID, true, token)
+            .subscribe(resp => {
+              if (resp.IsSuccess) {
+                resolve(resp.Data);
+              } else {
+                resolve(null);
+                //console.log('Ha ocurrido un error inesperado');
+              }
+            }, error => {
+              resolve(null);
+              //console.log('Mostrar alerta de error');
+              return null;
+            });
+        });
+      }
   }

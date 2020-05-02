@@ -47,6 +47,10 @@ const routes: Routes = [
   {
     path: 'historialpagoscreate',
     loadChildren: () => import('./pages/historialpagos/create/create.module').then( m => m.CreatePageModule)
+  },
+  {
+    path: 'logout',
+    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
   }
 ];
 

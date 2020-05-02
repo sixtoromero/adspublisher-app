@@ -9,6 +9,8 @@ import { HistorialPagosService } from '../../../services/historialpagos/historia
 import { HistorialPagosModel } from '../../../models/historialpagos.model';
 import { ClientesService } from '../../../services/Clientes/clientes.service';
 import { ClientesModel } from '../../../models/clientes.model';
+import { PlanesService } from '../../../services/Planes/planes.service';
+import { GeneralModel } from '../../../models/general.model';
 
 @Component({
   selector: 'app-list',
@@ -23,6 +25,7 @@ export class ListPage implements OnInit {
               private router: Router,
               private hservice: HistorialPagosService,
               private cservice: ClientesService,
+              private pservice: PlanesService,
               private gservice: GeneralService) { }
 
   iPlan = new PlanModel();
@@ -30,6 +33,9 @@ export class ListPage implements OnInit {
   liFactura = new Array<FacturasModel>();
   iHistorialPago = new HistorialPagosModel();
   iCliente = new ClientesModel();
+  liHistorialPagos = new Array<HistorialPagosModel>();
+
+  IsPayPal: boolean;
 
 
   token: string;
@@ -40,25 +46,52 @@ export class ListPage implements OnInit {
 
   async ngOnInit() {
 
+    this.IsPayPal = false;
+
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
 
-    this.iPlan = await this.gservice.getStorage('MyPlan');
-    //console.log('Plan', this.iPlan);
-    
     this.token = await this.gservice.getStorage('token');
     this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
 
-    if (this.liFactura.length > 0) {
+    if (this.liFactura != null) {
+      if (this.liFactura.length > 0) {
 
-      this.iHistorialPago.IDFactura = this.liFactura[0].IDFactura;
-      this.iHistorialPago.Valor_Pago = this.iPlan.Precio;
-      this.iHistorialPago.Estado = true;
-      this.iHistorialPago.NroMeses  = this.iPlan.NroMeses;
+        this.pservice.GetPlan(this.token, this.liFactura[0].IDPlan).then(presult => {
+          let detalle: string[];
+          let iDet: GeneralModel;
 
-      this.iCliente.IDFactura = this.liFactura[0].IDFactura;
+          this.iPlan = presult as PlanModel;
+
+          detalle = this.iPlan.Detalle.split(',');
+          this.iPlan.ADetalle = new Array<GeneralModel>();
+
+          detalle.forEach(i => {
+            iDet = new GeneralModel();
+            iDet.Value = i;
+            iDet.Descripcion = i;
+            this.iPlan.ADetalle.push(iDet);
+          });
+
+          this.gservice.setStorage('MyPlan', this.iPlan);
+
+          this.iHistorialPago.IDFactura = this.liFactura[0].IDFactura;
+          this.iHistorialPago.Valor_Pago = this.iPlan.Precio;
+          this.iHistorialPago.Estado = true;
+          this.iHistorialPago.NroMeses  = this.iPlan.NroMeses;
+
+          this.iCliente.IDFactura = this.liFactura[0].IDFactura;
+
+          if (this.iPlan.IDPlan === 1) {
+            this.presentAlert('Para gestionar el pago por favor seleccione un plan', true, 'planes');
+          } else {
+            this.getHistorialPago();
+          }
+
+        });
+      }
+    } else {
+      this.presentAlert('Para gestionar el pago por favor seleccione un plan', true, 'planes');
     }
-
-
     //console.log('Historial Pago', this.iHistorialPago);
 
   }
@@ -81,21 +114,13 @@ export class ListPage implements OnInit {
         const payment = new PayPalPayment(this.iPlan.Precio.toString(), this.currency, 'Descripción', 'sale');
         this.payPal.renderSinglePaymentUI(payment).then((res) => {
 
-          // console.log('Respuesta total:', res);
-          // console.log('Response:', res['response']);
-          // console.log('status:', res['response'].state);
-
           if (res['response'].state === 'approved') {
-            //insertHistorialPagos
+
             this.presentLoading('Registrando pago, por favor espere un momento.');
-            this.hservice.insertHistorialPagos(this.iHistorialPago, this.token).then(hpagos => {
-              console.log('Resultado Historial Pagos', hpagos);
+            this.hservice.insertHistorialPagos(this.iHistorialPago, this.token).then(hpagos => {              
 
               this.loading.dismiss();
-              
-              console.log('IDPlan: ', this.iPlan.IDPlan);
 
-              //this.iCliente.IDMicroempresa = this.
               this.iCliente.IDPlan = this.iPlan.IDPlan;
               this.cservice.sendMail(this.iCliente, this.token).then(email => {
                 if (hpagos === true) {
@@ -108,34 +133,17 @@ export class ListPage implements OnInit {
           } else {
             this.presentAlert('El pago no se generó por favor intente nuevamente.', false);
           }
-
-          // Successfully paid
-
-          // Example sandbox response
-          //
-          // {
-          //   "client": {
-          //     "environment": "sandbox",
-          //     "product_name": "PayPal iOS SDK",
-          //     "paypal_sdk_version": "2.16.0",
-          //     "platform": "iOS"
-          //   },
-          //   "response_type": "payment",
-          //   "response": {
-          //     "id": "PAY-1AB23456CD789012EF34GHIJ",
-          //     "state": "approved",
-          //     "create_time": "2016-10-03T13:33:33Z",
-          //     "intent": "sale"
-          //   }
-          // }
         }, () => {
           // Error or render dialog closed without being successful
+          this.presentAlert('Ha ocurrido un error inesperado en el pago del plan seleccionado', false);
         });
       }, () => {
         // Error in configuration
+        this.presentAlert('Ha ocurrido un error inesperado en la configuración de paypal', false);
       });
     }, () => {
       // Error in initialization, maybe PayPal isn't supported or something else
+      this.presentAlert('Ha ocurrido un error inesperado, tal vez PayPal no sea compatible o algo más', false);
     });
   }
 
@@ -150,7 +158,7 @@ export class ListPage implements OnInit {
     await alert.present();
   }
 
-  async presentAlert(message: string, isPage: boolean) {
+  async presentAlert(message: string, isPage: boolean, page: string = 'home') {
     const alert = await this.alertCtrl.create({
       header: 'ADS Publisher',
       subHeader: 'Resultado del Pago',
@@ -160,7 +168,7 @@ export class ListPage implements OnInit {
             text: 'Aceptar',
             handler: (blah) => {
               if (isPage) {
-                this.router.navigate(['home']);
+                this.router.navigate([page]);
               }
           }
         }
@@ -176,6 +184,29 @@ export class ListPage implements OnInit {
     });
 
     return this.loading.present();
+
+  }
+
+  async getHistorialPago() {
+    await this.presentLoading('Cargando historial de pagos.');
+    const result = await this.hservice.getHistorialPago(this.token, this.iCliente.IDCliente);
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert('No se cargaron los registros, intente nuevamente');
+    } else {
+      this.liHistorialPagos = result as Array<HistorialPagosModel>;
+      if (this.liHistorialPagos.length > 0) {
+        this.IsPayPal = false;
+      } else {
+        if (this.iPlan.IDPlan === 1) {
+          this.IsPayPal = false;
+          this.presentAlert('Para gestionar el pago por favor seleccione un plan, ¿desea continuar con el proceso?', true, 'planes');
+        } else {
+          this.IsPayPal = true;
+        }
+      }
+    }
 
   }
 

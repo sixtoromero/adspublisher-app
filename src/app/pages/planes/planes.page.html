@@ -31,7 +31,7 @@
         <ion-footer>
           <ion-row >
             <ion-col class="col-align-right">
-              <ion-button shape="round" fill="outline" (click)="presentAlert(item.Titulo, item.IDPlan, item.Precio)">
+              <ion-button shape="round" fill="outline" (click)="presentAlert(item.Titulo, item.IDPlan, item.Precio)" [disabled]="IsPlan">
                 <!-- <ion-icon slot="start" name="star"></ion-icon> -->
                 <ion-icon *ngIf="item.Seleccionado" slot="start" name="star" style="align-items: center;"></ion-icon>
                 <ion-icon *ngIf="!item.Seleccionado" slot="start" name="star-outline" style="align-items: center;"></ion-icon>

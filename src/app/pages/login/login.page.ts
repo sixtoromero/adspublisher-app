@@ -60,7 +60,7 @@ export class LoginPage implements OnInit {
 
       const result = await this.service.login(this.iClientes.Correo, this.iClientes.Password);
       (await loading).dismiss();
-      console.log('DATA', result);
+      
       if (result != null) {
         //navegar al tabs
         //this.navCtrl.navigateRoot(['home'], { animated: true});
@@ -103,6 +103,7 @@ export class LoginPage implements OnInit {
 
           this.gservice.setStorage('IDPlan', this.liFactura[0].IDPlan);
           this.gservice.setStorage('Factura', this.liFactura);
+
         } else {
           IDPlan = 1;
           this.gservice.setStorage('IDPlan', 1);
