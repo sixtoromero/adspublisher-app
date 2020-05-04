@@ -26,5 +26,7 @@ export const APIENDPOINT = {
     getPlanes: 'api/Planes/GetAllAsync',
     getPlan: 'api/Planes/GetAsync',
     insertHistorialPagos: 'api/HistorialPagos/InsertAsync',
-    getHistorialPagos: 'api/HistorialPagos/GetAllAsync'
+    getHistorialPagos: 'api/HistorialPagos/GetAllAsync',
+    getCategorias: 'api/Categorias/GetAllAsync',
+    getSubCategorias: 'api/SubCategorias/GetAllAsync'
 }

@@ -8,6 +8,10 @@ import { LoadingController, AlertController, ModalController } from '@ionic/angu
 import { ClientesModel } from '../../../models/clientes.model';
 import { FacturasService } from 'src/app/services/Facturas/facturas.service';
 import { FacturasModel } from 'src/app/models/facturas.model';
+import { CategoriaModel } from 'src/app/models/categoria.mode';
+import { CategoriasService } from 'src/app/services/categorias/categorias.service';
+import { SubCategoriasService } from 'src/app/services/subcategorias/subcategorias.service';
+import { SubCategoriaModel } from 'src/app/models/subcategoria.model';
 
 declare var google;
 
@@ -24,8 +28,12 @@ export class CreatePage implements OnInit {
   iMicroempresa = new MicroEmpresaModel();
   iCliente = new ClientesModel();
   Nomenclatura: string;
+  IDCategoria: number;
   map = null;
-  
+
+  liCategorias = new Array<CategoriaModel>();
+  liSubCategorias = new Array<SubCategoriaModel>();
+
   loading: any;
 
   geocoder = new google.maps.Geocoder();
@@ -39,6 +47,8 @@ export class CreatePage implements OnInit {
   constructor(private service: MicroEmpresaService,
         public gservice: GeneralService,
         private fservice: FacturasService,
+        private cservice: CategoriasService,
+        private sservice: SubCategoriasService,
         private loadinCtrl: LoadingController,
         private modalCtrl: ModalController,
         private alertCtrl: AlertController) { }
@@ -51,10 +61,12 @@ export class CreatePage implements OnInit {
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
     this.iMicroempresa.IDCliente = this.iCliente.IDCliente;
     
+    this.getCategorias();
+
     // this.iMicroempresa.Latitud = '21.15282000';
     // this.iMicroempresa.Longitud = '-7.0012451';
 
-    this.loadMap();
+    //this.loadMap();
 
     this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
 
@@ -208,6 +220,41 @@ export class CreatePage implements OnInit {
     }
 
   }
+
+  async getCategorias() {
+    
+    let token = await this.gservice.getStorage('token');
+
+    await this.presentLoading('Cargando Microempresa.');
+    const result = await this.cservice.GetCategorias(token);
+    this.liCategorias = result as CategoriaModel[];
+
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert('No se cargaron los registros de Categorías, intente nuevamente');
+    }
+
+  }
+
+  async getSubCategorias(ID: number) {
+        
+
+    let token = await this.gservice.getStorage('token');
+
+    await this.presentLoading('Cargando Microempresa.');
+    const result = await this.sservice.GetSubCategorias(token, ID);
+
+    this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert('No se cargaron las subcategorias, intente nuevamente');
+    } else {
+      this.liSubCategorias = result as SubCategoriaModel[];
+    }
+  }
+
+  
 
   close() {
     this.modalCtrl.dismiss();

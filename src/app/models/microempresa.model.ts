@@ -1,3 +1,5 @@
+import { SubCategoriaModel } from './subcategoria.model';
+
 export class MicroEmpresaModel {
     public IDMicroEmpresa: number;
     public IDCliente: number;
@@ -12,4 +14,7 @@ export class MicroEmpresaModel {
     public FechaCreacion: Date;
     public Estado: boolean;
     public IDPlan: number;
+
+    public SubCategorias: SubCategoriaModel[];
+
 }
