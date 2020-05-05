@@ -33,6 +33,7 @@ export class CreatePage implements OnInit {
 
   liCategorias = new Array<CategoriaModel>();
   liSubCategorias = new Array<SubCategoriaModel>();
+  //SubCategorias: string;
 
   loading: any;
 
@@ -60,7 +61,7 @@ export class CreatePage implements OnInit {
     
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
     this.iMicroempresa.IDCliente = this.iCliente.IDCliente;
-    
+
     this.getCategorias();
 
     // this.iMicroempresa.Latitud = '21.15282000';
@@ -137,37 +138,37 @@ export class CreatePage implements OnInit {
       zoom: 12
     });
 
-    google.maps.event.addListenerOnce(this.map, 'idle', () => {
-      mapEle.classList.add('show-map');
-      //this.renderMarkers();
-    });
+    // google.maps.event.addListenerOnce(this.map, 'idle', () => {
+    //   mapEle.classList.add('show-map');
+    //   //this.renderMarkers();
+    // });
   }
 
-  renderMarkers() {
-    this.marker.position = {lat: 4.658383846282959, lng: -74.09394073486328};
-    this.marker.title = "PROBANDO ANDO";
-    this.addMarker(this.marker);
-  }
+  // renderMarkers() {
+  //   this.marker.position = {lat: 4.658383846282959, lng: -74.09394073486328};
+  //   this.marker.title = "PROBANDO ANDO";
+  //   this.addMarker(this.marker);
+  // }
 
-  addMarker(marker: Marker) {
+  // addMarker(marker: Marker) {
     
-    const contentString = 'La ubicación de la dirección ' + this.iMicroempresa.Direccion;
+  //   const contentString = 'La ubicación de la dirección ' + this.iMicroempresa.Direccion;
 
-    var infowindow = new google.maps.InfoWindow({
-      content: contentString
-    });
+  //   var infowindow = new google.maps.InfoWindow({
+  //     content: contentString
+  //   });
     
-    const mk = new google.maps.Marker({
-      position: marker.position,
-      map: this.map,
-      title: marker.title
-    });
+  //   const mk = new google.maps.Marker({
+  //     position: marker.position,
+  //     map: this.map,
+  //     title: marker.title
+  //   });
 
-    mk.addListener('click', function() {
-      infowindow.open(this.map, mk);
-    });
-    return mk;
-  }
+  //   mk.addListener('click', function() {
+  //     infowindow.open(this.map, mk);
+  //   });
+  //   return mk;
+  // }
 
   async registro(freg: NgForm) {
     let valid: any;
@@ -177,16 +178,17 @@ export class CreatePage implements OnInit {
       
       if (this.IDMicroEmpresa == 0) {
         this.iMicroempresa.IDMicroEmpresa = 0;
+
         valid = await this.service.register(this.iMicroempresa, this.token);
       } else {
         this.iMicroempresa.IDMicroEmpresa = this.IDMicroEmpresa;
         valid = await this.service.updatemicroempresa(this.iMicroempresa, this.token);
       }
-      
-      if (valid == true) {
+
+      if (valid === true) {
         freg.reset();
         this.map = null;
-                
+
         this.loadMap();
 
         this.loading.dismiss();
