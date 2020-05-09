@@ -28,5 +28,6 @@ export const APIENDPOINT = {
     insertHistorialPagos: 'api/HistorialPagos/InsertAsync',
     getHistorialPagos: 'api/HistorialPagos/GetAllAsync',
     getCategorias: 'api/Categorias/GetAllAsync',
-    getSubCategorias: 'api/SubCategorias/GetAllAsync'
+    getSubCategorias: 'api/SubCategorias/GetAllAsync',
+    getCategoriasporMicroempresas: 'api/CategoriasPorMicroEmpresas/GetAllAsync',
 }

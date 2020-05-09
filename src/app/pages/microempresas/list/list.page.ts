@@ -81,17 +81,15 @@ export class ListPage implements OnInit {
         this.getInfoMicroEmpresa();
       }
     }
-
   }
 
 
   async getInfoMicroEmpresa() {
-    
+
     let _token = await this.gservice.getStorage('token');
 
     await this.presentLoading('Cargando lista de Microempresas.');
     const result = await this.service.getInfoMicroEmpresa(_token, this.iCliente.IDCliente);
-        
 
     this.loading.dismiss();
 

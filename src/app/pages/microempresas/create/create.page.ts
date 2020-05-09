@@ -12,6 +12,10 @@ import { CategoriaModel } from 'src/app/models/categoria.mode';
 import { CategoriasService } from 'src/app/services/categorias/categorias.service';
 import { SubCategoriasService } from 'src/app/services/subcategorias/subcategorias.service';
 import { SubCategoriaModel } from 'src/app/models/subcategoria.model';
+import { DescriptionDynamicModel } from 'src/app/models/descriptiondynamic.model';
+import { DescriptiondynamicService } from 'src/app/services/descriptiondynamic/descriptiondynamic.service';
+import { CategoriasPorMicroEmpresasService } from 'src/app/services/categoriaspormicroempresas/categoriaspormicroempresas.service';
+import { CategoriasPorMicroEmpresasModel } from 'src/app/models/categoriaspormicroempresas.model';
 
 declare var google;
 
@@ -28,12 +32,14 @@ export class CreatePage implements OnInit {
   iMicroempresa = new MicroEmpresaModel();
   iCliente = new ClientesModel();
   Nomenclatura: string;
-  IDCategoria: number;
+  //IDCategoria: number;
   map = null;
 
   liCategorias = new Array<CategoriaModel>();
   liSubCategorias = new Array<SubCategoriaModel>();
-  //SubCategorias: string;
+  DescripcionCategoria: string;
+
+  liCaMicroEmpresa = new Array<CategoriasPorMicroEmpresasModel>();
 
   loading: any;
 
@@ -50,6 +56,8 @@ export class CreatePage implements OnInit {
         private fservice: FacturasService,
         private cservice: CategoriasService,
         private sservice: SubCategoriasService,
+        private dservice: DescriptiondynamicService,
+        private cmservice: CategoriasPorMicroEmpresasService,
         private loadinCtrl: LoadingController,
         private modalCtrl: ModalController,
         private alertCtrl: AlertController) { }
@@ -58,11 +66,37 @@ export class CreatePage implements OnInit {
     //console.log('IDClientes en Crear', this.IDCliente);
     //this.IDMicroEmpresa = 0;
     this.token = await this.gservice.getStorage('token');
-    
+
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
     this.iMicroempresa.IDCliente = this.iCliente.IDCliente;
 
-    this.getCategorias();
+    if (this.IDMicroEmpresa > 0) {
+      this.getCategorias().then(result => {
+        this.getMicroEmpresa().then(() => {
+          this.GetDescriptionDyn(this.iMicroempresa.IDCategoria).then(() => {
+            this.getSubCategorias(this.iMicroempresa.IDCategoria);
+          });
+
+          this.GetCategoriasporMicroempresas(this.iMicroempresa.IDMicroEmpresa);
+
+        });
+      });
+    } else {
+
+      this.getCategorias();
+    }
+
+    // if (this.IDMicroEmpresa > 0) {
+    //   this.getMicroEmpresa().then(result => {
+    //     //this.loading.dismiss();
+    //     this.getCategorias().then(() => {
+    //       this.GetDescriptionDyn(this.iMicroempresa.IDCategoria);
+    //     });
+    //   });
+    // } else {
+
+    //   this.getCategorias();      
+    // }
 
     // this.iMicroempresa.Latitud = '21.15282000';
     // this.iMicroempresa.Longitud = '-7.0012451';
@@ -78,11 +112,6 @@ export class CreatePage implements OnInit {
         this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
       }
     }
-
-    if (this.IDMicroEmpresa > 0) {
-      this.getMicroEmpresa();
-    }
-
   }
 
 
@@ -122,9 +151,6 @@ export class CreatePage implements OnInit {
     }).catch(err => {
       console.log(err);
     });
-
-    //console.log('RESULTADO GEOLOCALIZACIÓN', location);
-
   }
 
   loadMap() {
@@ -137,38 +163,7 @@ export class CreatePage implements OnInit {
       center: myLatLng,
       zoom: 12
     });
-
-    // google.maps.event.addListenerOnce(this.map, 'idle', () => {
-    //   mapEle.classList.add('show-map');
-    //   //this.renderMarkers();
-    // });
   }
-
-  // renderMarkers() {
-  //   this.marker.position = {lat: 4.658383846282959, lng: -74.09394073486328};
-  //   this.marker.title = "PROBANDO ANDO";
-  //   this.addMarker(this.marker);
-  // }
-
-  // addMarker(marker: Marker) {
-    
-  //   const contentString = 'La ubicación de la dirección ' + this.iMicroempresa.Direccion;
-
-  //   var infowindow = new google.maps.InfoWindow({
-  //     content: contentString
-  //   });
-    
-  //   const mk = new google.maps.Marker({
-  //     position: marker.position,
-  //     map: this.map,
-  //     title: marker.title
-  //   });
-
-  //   mk.addListener('click', function() {
-  //     infowindow.open(this.map, mk);
-  //   });
-  //   return mk;
-  // }
 
   async registro(freg: NgForm) {
     let valid: any;
@@ -176,9 +171,8 @@ export class CreatePage implements OnInit {
       
       this.presentLoading('Por favor espere.');
       
-      if (this.IDMicroEmpresa == 0) {
+      if (this.IDMicroEmpresa === 0) {
         this.iMicroempresa.IDMicroEmpresa = 0;
-
         valid = await this.service.register(this.iMicroempresa, this.token);
       } else {
         this.iMicroempresa.IDMicroEmpresa = this.IDMicroEmpresa;
@@ -209,29 +203,67 @@ export class CreatePage implements OnInit {
     
     let _token = await this.gservice.getStorage('token');
 
-    await this.presentLoading('Cargando Microempresa.');
+    //await this.presentLoading('Cargando Microempresa.');
+
     const result = await this.service.getMicroEmpresa(_token, this.IDMicroEmpresa);
     this.iMicroempresa = result as MicroEmpresaModel;
+    
+    //console.log('MicroEmpresa', this.iMicroempresa);
 
-    this.loading.dismiss();
+    //this.loading.dismiss();
 
     if (result == null) {
       this.showAlert('No se cargaron los registros, intente nuevamente');
     } else {
+      /*NOTA: Se debe consultar las subcategorías para validar cual es su categoría. las subcategorías sirven para el otro combo*/
+      //this.GetDescriptionDyn(this.iMicroempresa)
       this.getCoords();
+    }
+  }
+
+
+  async GetDescripcionCategoria() {
+    
+    //await this.presentLoading('Cargando Microempresa.');
+    await this.presentLoading('Espere un momento por favor.');
+
+    this.getMicroEmpresa().then(result => {
+      this.loading.dismiss();
+      this.GetDescriptionDyn(this.iMicroempresa.IDCategoria);
+    });
+  }
+
+
+  async getCategorias() {
+
+    let token = await this.gservice.getStorage('token');
+
+    //await this.presentLoading('Cargando Categorías.');
+    const result = await this.cservice.GetCategorias(token);
+    this.liCategorias = result as CategoriaModel[];
+    //this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert('No se cargaron los registros de Categorías, intente nuevamente');
     }
 
   }
 
-  async getCategorias() {
-    
+  async GetCategoriasporMicroempresas(ID: number) {
+
+    let loading = this.loadinCtrl.create({
+      message: 'espere un momento por favor.'
+    });
+    (await loading).present();
+
     let token = await this.gservice.getStorage('token');
+    
+    const result = await this.cmservice.GetCategoriasporMicroempresas(token, ID);
 
-    await this.presentLoading('Cargando Microempresa.');
-    const result = await this.cservice.GetCategorias(token);
-    this.liCategorias = result as CategoriaModel[];
+    this.liCaMicroEmpresa = result as CategoriasPorMicroEmpresasModel[];
+    console.log('CategoriasPorMicroEmpresasModel', this.liCaMicroEmpresa);
 
-    this.loading.dismiss();
+    (await loading).dismiss();
 
     if (result == null) {
       this.showAlert('No se cargaron los registros de Categorías, intente nuevamente');
@@ -244,10 +276,16 @@ export class CreatePage implements OnInit {
 
     let token = await this.gservice.getStorage('token');
 
-    await this.presentLoading('Cargando Microempresa.');
+    //await this.presentLoading('Cargando Subcategorías.');
+
+    let loading = this.loadinCtrl.create({
+      message: 'Cargando Subcategorías'
+    });
+    (await loading).present();
+
     const result = await this.sservice.GetSubCategorias(token, ID);
 
-    this.loading.dismiss();
+    (await loading).dismiss();
 
     if (result == null) {
       this.showAlert('No se cargaron las subcategorias, intente nuevamente');
@@ -255,8 +293,6 @@ export class CreatePage implements OnInit {
       this.liSubCategorias = result as SubCategoriaModel[];
     }
   }
-
-  
 
   close() {
     this.modalCtrl.dismiss();
@@ -321,4 +357,27 @@ export class CreatePage implements OnInit {
     //var address = document.getElementById('address').value;
 
   }
+
+  async GetDescriptionDyn(ID: number) {
+
+
+    let iDescDyn = new DescriptionDynamicModel();
+
+    iDescDyn.TableName = 'Categorias';
+    iDescDyn.Filter = 'IDCategoria';
+    iDescDyn.GetFieldName = 'Descripcion';
+    iDescDyn.Value = ID;
+
+    //await this.presentLoading('Espere un momento por favor.');
+    const result = await this.dservice.GetDescriptionDyn(iDescDyn, this.token);
+    
+    //this.loading.dismiss();
+
+    if (result == null) {
+      this.showAlert('No se cargaron los registros, intente nuevamente');
+    } else {
+      this.DescripcionCategoria = result['Data'];
+    }
+  }
+  
 }

@@ -13,6 +13,7 @@ export class MicroEmpresaModel {
     public Latitud: string;
     public FechaCreacion: Date;
     public Estado: boolean;
+    public IDCategoria: number;
     public IDPlan: number;
 
     public SubCategorias: [];

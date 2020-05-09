@@ -49,7 +49,7 @@ export class CreatepqrsPage implements OnInit {
       this.presentLoading('Por favor espere.');
       this.iPQRS.IDCliente = await this.gservice.getStorage('IDCliente');
       
-      if (this.IDPQRS == 0) {
+      if (this.IDPQRS === 0) {
         this.iPQRS.IDPQRS = 0;
         valid = await this.service.register(this.iPQRS, this.token);
       } else {
@@ -127,7 +127,7 @@ export class CreatepqrsPage implements OnInit {
   }
 
   async presentLoading(message: string) {
-    
+
     this.loading = await this.loadinCtrl.create({
       message
     });
@@ -137,7 +137,7 @@ export class CreatepqrsPage implements OnInit {
   }
 
   async showAlert(message: string) {
-
+ 
     const alert = await this.alertCtrl.create({
       header: 'ADS Publisher',
       message,
