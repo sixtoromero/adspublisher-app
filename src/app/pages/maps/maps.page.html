@@ -13,3 +13,16 @@
 <ion-content  padding>
   <div id="map"></div>
 </ion-content>
+
+<ion-footer> 
+  <ion-toolbar color="primary">     
+    <ion-title align="left">
+      {{ filtro }}
+    </ion-title> 
+    <ion-buttons slot="end">
+      <ion-button (click)="modalfilter()">
+        <ion-icon slot="icon-only" name="search" color="success"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer> 

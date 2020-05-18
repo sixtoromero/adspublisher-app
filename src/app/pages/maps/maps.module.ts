@@ -7,13 +7,19 @@ import { IonicModule } from '@ionic/angular';
 import { MapsPageRoutingModule } from './maps-routing.module';
 
 import { MapsPage } from './maps.page';
+import { FilterPage } from './filter/filter.page';
+import { FilterPageModule } from './filter/filter.module';
 
 @NgModule({
+  entryComponents: [
+    FilterPage
+  ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MapsPageRoutingModule
+    MapsPageRoutingModule,
+    FilterPageModule
   ],
   declarations: [MapsPage]
 })

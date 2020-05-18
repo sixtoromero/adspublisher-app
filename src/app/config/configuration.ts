@@ -9,6 +9,7 @@ export const APIENDPOINT = {
     DeleteMicroEmpresa: 'api/MicroEmpresas/DeleteAsync',
     getMicroEmpresa: 'api/MicroEmpresas/GetAsync',
     getInfoMicroEmpresa: 'api/MicroEmpresas/GetAllAsync',
+    getFilterMicroEmpresa: 'api/MicroEmpresas/GetFilterAsync',
     Insertpqrs: 'api/PQRS/InsertAsync',
     Updatepqrs: 'api/PQRS/UpdateAsync',
     Deletepqrs: 'api/PQRS/DeleteAsync',
@@ -29,5 +30,6 @@ export const APIENDPOINT = {
     getHistorialPagos: 'api/HistorialPagos/GetAllAsync',
     getCategorias: 'api/Categorias/GetAllAsync',
     getSubCategorias: 'api/SubCategorias/GetAllAsync',
-    getCategoriasporMicroempresas: 'api/CategoriasPorMicroEmpresas/GetAllAsync',
+    getCategoriasporMicroempresas: 'api/CategoriasPorMicroEmpresas/GetAllAsync'
+
 }

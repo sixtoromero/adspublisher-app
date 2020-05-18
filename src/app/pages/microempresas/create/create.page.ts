@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, DebugElement } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Marker } from '../../../models/marker.model';
+//import { Marker } from '../../../models/marker.model';
 import { MicroEmpresaModel } from '../../../models/microempresa.model';
 import { MicroEmpresaService } from '../../../services/MicroEmpresas/microempresas.service';
 import { GeneralService } from '../../../services/general.service';
@@ -16,6 +16,7 @@ import { DescriptionDynamicModel } from 'src/app/models/descriptiondynamic.model
 import { DescriptiondynamicService } from 'src/app/services/descriptiondynamic/descriptiondynamic.service';
 import { CategoriasPorMicroEmpresasService } from 'src/app/services/categoriaspormicroempresas/categoriaspormicroempresas.service';
 import { CategoriasPorMicroEmpresasModel } from 'src/app/models/categoriaspormicroempresas.model';
+import { MarkerModel } from 'src/app/models/marker.model';
 
 declare var google;
 
@@ -38,6 +39,7 @@ export class CreatePage implements OnInit {
   liCategorias = new Array<CategoriaModel>();
   liSubCategorias = new Array<SubCategoriaModel>();
   DescripcionCategoria: string;
+  DescripcionSubCategoria: string[];
 
   liCaMicroEmpresa = new Array<CategoriasPorMicroEmpresasModel>();
 
@@ -48,7 +50,7 @@ export class CreatePage implements OnInit {
   token: string;
   liFactura = new Array<FacturasModel>();
 
-  marker: Marker;
+  marker: MarkerModel;
   miputavariable: string;
 
   constructor(private service: MicroEmpresaService,
@@ -74,11 +76,16 @@ export class CreatePage implements OnInit {
       this.getCategorias().then(result => {
         this.getMicroEmpresa().then(() => {
           this.GetDescriptionDyn(this.iMicroempresa.IDCategoria).then(() => {
-            this.getSubCategorias(this.iMicroempresa.IDCategoria);
+            this.getSubCategorias(this.iMicroempresa.IDCategoria).then(() => {
+              this.GetCategoriasporMicroempresas(this.iMicroempresa.IDMicroEmpresa).then(() => {
+                //this.iMicroempresa.SubCategorias.push(this.liCaMicroEmpresa);
+                this.liCaMicroEmpresa.forEach(item => {
+                  this.iMicroempresa.SubCategorias.push(item.IDSubCategoria);
+                  //this.DescripcionSubCategoria.push(item.Descripcion);
+                });
+              });
+            });
           });
-
-          this.GetCategoriasporMicroempresas(this.iMicroempresa.IDMicroEmpresa);
-
         });
       });
     } else {
@@ -261,7 +268,6 @@ export class CreatePage implements OnInit {
     const result = await this.cmservice.GetCategoriasporMicroempresas(token, ID);
 
     this.liCaMicroEmpresa = result as CategoriasPorMicroEmpresasModel[];
-    console.log('CategoriasPorMicroEmpresasModel', this.liCaMicroEmpresa);
 
     (await loading).dismiss();
 
@@ -272,11 +278,8 @@ export class CreatePage implements OnInit {
   }
 
   async getSubCategorias(ID: number) {
-        
 
     let token = await this.gservice.getStorage('token');
-
-    //await this.presentLoading('Cargando Subcategorías.');
 
     let loading = this.loadinCtrl.create({
       message: 'Cargando Subcategorías'
@@ -284,6 +287,8 @@ export class CreatePage implements OnInit {
     (await loading).present();
 
     const result = await this.sservice.GetSubCategorias(token, ID);
+
+    //console.log('SubCategorias', result);
 
     (await loading).dismiss();
 

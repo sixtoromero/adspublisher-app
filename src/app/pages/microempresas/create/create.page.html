@@ -59,6 +59,7 @@
               #SubCategoria
               [(ngModel)]="iMicroempresa.SubCategorias"
               placeholder="--seleccionar--"
+              [selectedText]="DescripcionSubCategoria"
               multiple="true"
               required>
           <ion-select-option  *ngFor="let item of liSubCategorias" value="{{item.IDSubCategoria}}" style="width: 100%;">{{ item.Descripcion }}</ion-select-option>

@@ -16,6 +16,6 @@ export class MicroEmpresaModel {
     public IDCategoria: number;
     public IDPlan: number;
 
-    public SubCategorias: [];
+    public SubCategorias: number[];
 
 }

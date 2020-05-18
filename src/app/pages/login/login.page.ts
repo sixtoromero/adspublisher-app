@@ -74,7 +74,7 @@ export class LoginPage implements OnInit {
 
         this.gservice.avatar = environment.imageURL + this.iCliente.Foto;
 
-        console.log('avatar', this.gservice.avatar);
+        //console.log('avatar', this.gservice.avatar);
         this.gservice.saveStorage('avatar', this.gservice.avatar);
         
         this.getPlan();

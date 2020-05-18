@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Marker } from '../../models/marker.model';
+//import { Marker, MarkerModel } from '../../models/marker.model';
 import { GeneralService } from '../../services/general.service';
+import { FilterPage } from './filter/filter.page';
+import { ModalController, AlertController } from '@ionic/angular';
+import { MicroEmpresaModel } from '../../models/microempresa.model';
+import { MarkerModel } from 'src/app/models/marker.model';
+import { PositionModel } from 'src/app/models/position.model';
 
 declare var google;
 
@@ -12,45 +17,99 @@ declare var google;
 export class MapsPage implements OnInit {
 
   map = null;
+  filtro: string;
+  liMicroEmpresa = new Array<MicroEmpresaModel>();
+  markers: MarkerModel[];
 
-  markers: Marker[] = [
-    {
-      position: {
-        lat: 4.658383846282959,
-        lng: -74.09394073486328,
-      },
-      title: 'Parque Simón Bolivar'
-    },
-    {
-      position: {
-        lat: 4.667945861816406,
-        lng: -74.09964752197266,
-      },
-      title: 'Jardín Botánico'
-    },
-    {
-      position: {
-        lat: 4.676802158355713,
-        lng: -74.04825592041016,
-      },
-      title: 'Parque la 93'
-    },
-    {
-      position: {
-        lat: 4.6554284,
-        lng: -74.1094989,
-      },
-      title: 'Maloka'
-    },
-  ];
-
-  constructor(gservice: GeneralService) { }
+  constructor(gservice: GeneralService,
+              private modalCtrl: ModalController,
+              public alertCtrl: AlertController) { }
 
   ngOnInit() {
-    this.loadMap();
+    this.filtro = 'filtro';
+    this.loadMap(13);
   }
 
-  loadMap() {
+  async modalfilter() {
+    const modal = await this.modalCtrl.create({
+      component: FilterPage,
+      componentProps: {
+        title: 'Crear Cliente',
+        modelinfotercero: null
+      }
+    });
+    
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+
+    if (data["ModalProcess"]) {
+
+      this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];
+
+      console.log('MicroEmpresas', this.liMicroEmpresa);
+
+      this.markers = new Array<MarkerModel>();      
+
+      this.liMicroEmpresa.forEach(item => {
+
+        let imarker = new MarkerModel();
+        imarker.position = new PositionModel();
+
+        imarker.title = item.Nombre;
+        imarker.descripcion = item.Descripcion;
+        imarker.position.lat = +item.Latitud;
+        imarker.position.lng = +item.Longitud;
+
+        this.markers.push(imarker);
+
+      });
+
+      this.renderMarkers();
+
+    }
+
+  }
+
+  async presentAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'ADS Publisher',
+      subHeader: 'Filtros',
+      message: 'Seleccione el filtro Categoría/Subcategoría',
+      inputs: [
+        {
+          name: 'title',
+          label:'Categorías',
+          value: '-1',
+          placeholder: 'Title',
+        },
+        {
+          name: 'password',
+          placeholder: 'Password'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            //console.log('Cancelar');
+          }
+        },
+        {
+            text: 'Aceptar',
+            handler: (blah) => {
+              //this.SetPlan(IDPlan, ValorPlan, true);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  loadMap(zoom: number) {
     // create a new map by passing HTMLElement
     const mapEle: HTMLElement = document.getElementById('map');
     // create LatLng object
@@ -58,41 +117,35 @@ export class MapsPage implements OnInit {
     // create map
     this.map = new google.maps.Map(mapEle, {
       center: myLatLng,
-      zoom: 12
+      zoom
     });
 
+    
     google.maps.event.addListenerOnce(this.map, 'idle', () => {
       //this.renderMarkers();
       mapEle.classList.add('show-map');
-      this.renderMarkers();
+      //this.renderMarkers();
+
     });
   }
 
   renderMarkers() {
     this.markers.forEach(marker => {
       this.addMarker(marker);
-    });
+    });    
+
   }
 
-  addMarker(marker: Marker) {
+  addMarker(marker: MarkerModel) {
+    
     const contentString = '<div id="content">'+
       '<div id="siteNotice">'+
       '</div>'+
-      '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+      '<h1 id="firstHeading" class="firstHeading">' + marker.title + '</h1>'+
       '<div id="bodyContent">'+
-      '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-      'sandstone rock formation in the southern part of the '+
-      'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-      'south west of the nearest large town, Alice Springs; 450&#160;km '+
-      '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-      'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-      'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-      'Aboriginal people of the area. It has many springs, waterholes, '+
-      'rock caves and ancient paintings. Uluru is listed as a World '+
-      'Heritage Site.</p>'+
-      '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-      'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-      '(last visited June 22, 2009).</p>'+
+      '<p>'+
+      marker.descripcion +
+      '</p> '+
       '</div>' +
       '</div>';
 

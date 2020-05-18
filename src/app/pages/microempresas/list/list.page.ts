@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MicroEmpresaModel } from '../../../models/microempresa.model';
 import { GeneralService } from '../../../services/general.service';
-import { Marker } from '../../../models/marker.model';
+//import { Marker } from '../../../models/marker.model';
 import { CreatePage } from '../create/create.page';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { ClientesModel } from '../../../models/clientes.model';

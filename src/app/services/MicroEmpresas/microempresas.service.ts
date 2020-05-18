@@ -9,6 +9,7 @@ import { APIENDPOINT } from '../../config/configuration';
 import { GeneralService } from '../general.service';
 import { Storage } from '@ionic/storage';
 import { MicroEmpresaModel } from '../../models/microempresa.model';
+import { FilterModel } from 'src/app/models/filter.model';
 
 @Injectable({
     providedIn: 'root'

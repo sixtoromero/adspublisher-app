@@ -1,7 +1,7 @@
-export interface Marker {
-    position: {
-      lat: number,
-      lng: number,
-    };
-    title: string;
-  }
+import { PositionModel } from './position.model';
+
+export class MarkerModel {
+  public position: PositionModel;
+  public title: string;
+  public descripcion: string;
+}

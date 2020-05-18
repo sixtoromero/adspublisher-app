@@ -1,16 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MapsPage } from './maps.page';
+import { FilterPage } from './filter.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: MapsPage
-  },
-  {
-    path: 'filter',
-    loadChildren: () => import('./filter/filter.module').then( m => m.FilterPageModule)
+    component: FilterPage
   }
 ];
 
@@ -18,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class MapsPageRoutingModule {}
+export class FilterPageRoutingModule {}
