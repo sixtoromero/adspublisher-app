@@ -24,6 +24,8 @@ import { Camera } from '@ionic-native/camera/ngx';
 
 import { PayPal } from '@ionic-native/paypal/ngx';
 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,6 +47,7 @@ import { PayPal } from '@ionic-native/paypal/ngx';
     File,
     Camera,
     PayPal,
+    Geolocation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

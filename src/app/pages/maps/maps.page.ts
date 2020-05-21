@@ -7,6 +7,8 @@ import { MicroEmpresaModel } from '../../models/microempresa.model';
 import { MarkerModel } from 'src/app/models/marker.model';
 import { PositionModel } from 'src/app/models/position.model';
 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+
 declare var google;
 
 @Component({
@@ -23,11 +25,12 @@ export class MapsPage implements OnInit {
 
   constructor(gservice: GeneralService,
               private modalCtrl: ModalController,
+              private geolocation: Geolocation,
               public alertCtrl: AlertController) { }
 
   ngOnInit() {
     this.filtro = 'filtro';
-    this.loadMap(13);
+    this.getGeo();
   }
 
   async modalfilter() {
@@ -45,11 +48,9 @@ export class MapsPage implements OnInit {
 
     if (data["ModalProcess"]) {
 
-      this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];
+      this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];      
 
-      console.log('MicroEmpresas', this.liMicroEmpresa);
-
-      this.markers = new Array<MarkerModel>();      
+      this.markers = new Array<MarkerModel>();
 
       this.liMicroEmpresa.forEach(item => {
 
@@ -69,6 +70,14 @@ export class MapsPage implements OnInit {
 
     }
 
+  }
+
+  getGeo() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.loadMap(13, resp.coords.latitude, resp.coords.longitude);
+     }).catch((error) => {
+       console.log('Error getting location', error);
+     });
   }
 
   async presentAlert() {
@@ -109,23 +118,59 @@ export class MapsPage implements OnInit {
     await alert.present();
   }
 
-  loadMap(zoom: number) {
+  loadMap(zoom: number, lat: number, lng: number) {
+    
     // create a new map by passing HTMLElement
     const mapEle: HTMLElement = document.getElementById('map');
     // create LatLng object
-    const myLatLng = {lat: 4.658383846282959, lng: -74.09394073486328};
+    //const myLatLng = {lat: 4.658383846282959, lng: -74.09394073486328};
+    const myLatLng = {lat, lng};
     // create map
     this.map = new google.maps.Map(mapEle, {
       center: myLatLng,
       zoom
-    });
+    });    
 
-    
     google.maps.event.addListenerOnce(this.map, 'idle', () => {
       //this.renderMarkers();
       mapEle.classList.add('show-map');
       //this.renderMarkers();
 
+        this.markers = new Array<MarkerModel>();
+        let imarker = new MarkerModel();
+
+        imarker.position = new PositionModel();
+
+        imarker.title = 'Mi ubicación';
+        imarker.descripcion = 'Aquí estoy yo';
+        imarker.position.lat = +lat;
+        imarker.position.lng = +lng;
+        imarker.icon = 'assets/images/location.png';
+
+        this.markers.push(imarker);        
+
+        this.renderMarkers();
+
+        this.geoArea('Av Suba #28A - 68');
+
+    });
+  }
+
+  geoArea(address: string) {
+    
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address }, function(results, status) {
+      if (status === google.maps.GeocoderStatus.OK) {
+          var result = results[0]; // el primer resultado es el más relevante
+          console.log('info-geo', result);
+          
+          console.log('Lat', result.geometry.location.lat);
+          console.log('Lng', result.geometry.location.lng);
+
+      } else {
+         console.log('Google respondió:',status);
+      }
     });
   }
 
@@ -156,6 +201,7 @@ export class MapsPage implements OnInit {
     const mk = new google.maps.Marker({
       position: marker.position,
       map: this.map,
+      icon: marker.icon,
       title: marker.title
     });
 
