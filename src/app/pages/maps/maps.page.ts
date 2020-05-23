@@ -8,6 +8,8 @@ import { MarkerModel } from 'src/app/models/marker.model';
 import { PositionModel } from 'src/app/models/position.model';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { GeocodeModel } from 'src/app/models/geocode.model';
+import { ConsoleReporter } from 'jasmine';
 
 declare var google;
 
@@ -18,6 +20,7 @@ declare var google;
 })
 export class MapsPage implements OnInit {
 
+  apiKey: string = "AIzaSyArnxRnjhaHA94pbIuL_mjP";
   map = null;
   filtro: string;
   liMicroEmpresa = new Array<MicroEmpresaModel>();
@@ -123,7 +126,9 @@ export class MapsPage implements OnInit {
     // create a new map by passing HTMLElement
     const mapEle: HTMLElement = document.getElementById('map');
     // create LatLng object
-    //const myLatLng = {lat: 4.658383846282959, lng: -74.09394073486328};
+    // Suba: 4.731198, -74.071963
+    // Teusaquillo: 4.65838384628295, -74.09394073486328
+    //const myLatLng = {lat: 4.731198, lng: -74.071963};
     const myLatLng = {lat, lng};
     // create map
     this.map = new google.maps.Map(mapEle, {
@@ -153,23 +158,48 @@ export class MapsPage implements OnInit {
 
         this.geoArea('Av Suba #28A - 68');
 
+        //this.validateLocationAsToZone(lat, lng);
+        this.validateLocationAsToZone(myLatLng.lat, myLatLng.lng);
+
     });
   }
 
   geoArea(address: string) {
-    
     const geocoder = new google.maps.Geocoder();
-
     geocoder.geocode({ address }, function(results, status) {
+      debugger
       if (status === google.maps.GeocoderStatus.OK) {
           var result = results[0]; // el primer resultado es el más relevante
           console.log('info-geo', result);
-          
           console.log('Lat', result.geometry.location.lat);
           console.log('Lng', result.geometry.location.lng);
-
       } else {
          console.log('Google respondió:',status);
+      }
+    });
+  }
+
+  validateLocationAsToZone(lat: number, lng: number) {
+    // Example:
+    // https://maps.googleapis.com/maps/api/geocode/json?latlng=4.6775432,-74.1747025&key=AIzaSyArnxRnjhaHA94pbIuL_mjP-fZKBL0MD2E
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({'location': {lat: lat, lng: lng}}, function(results: GeocodeModel[], status: string) {
+      if (status === 'OK') {
+        var isLocationValid = false;
+        for (let r of results) {
+          for (let address of r.address_components) {
+            let lname = address.long_name.toLowerCase();
+            console.log("-----> " + lname);
+            if (lname.indexOf("suba") !== -1) {
+              isLocationValid = true;
+            }
+          }
+        }
+        if (!isLocationValid) {
+          window.alert('Usted no se encuentra en la zona de Suba');
+        }
+      } else {
+        window.alert('Hubo un problema para detectar su localizacion: ' + status);
       }
     });
   }
