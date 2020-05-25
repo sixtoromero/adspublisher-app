@@ -110,15 +110,15 @@ export class CreatePage implements OnInit {
 
     //this.loadMap();
 
-    this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
+    // this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
 
-    if (this.liFactura === null) {
-      this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
-    } else {
-      if (this.liFactura.length === 0) {
-        this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
-      }
-    }
+    // if (this.liFactura === null) {
+    //   this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
+    // } else {
+    //   if (this.liFactura.length === 0) {
+    //     this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
+    //   }
+    // }
   }
 
 
@@ -361,6 +361,10 @@ export class CreatePage implements OnInit {
     return promise;
     //var address = document.getElementById('address').value;
 
+  }
+
+  compareWith(item1, item2) {
+     return item1.IDCategoria === item2.IDCategoria;
   }
 
   async GetDescriptionDyn(ID: number) {

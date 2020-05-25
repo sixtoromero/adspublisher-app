@@ -147,17 +147,17 @@ export class MapsPage implements OnInit {
         imarker.position.lng = +lng;
         imarker.icon = 'assets/images/location.png';
 
-        this.markers.push(imarker);        
+        this.markers.push(imarker);
 
         this.renderMarkers();
 
-        this.geoArea('Av Suba #28A - 68');
+        //this.geoArea('Av Suba #28A - 68');
 
     });
   }
 
   geoArea(address: string) {
-    
+
     const geocoder = new google.maps.Geocoder();
 
     geocoder.geocode({ address }, function(results, status) {

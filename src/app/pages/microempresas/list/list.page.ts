@@ -6,6 +6,8 @@ import { CreatePage } from '../create/create.page';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { ClientesModel } from '../../../models/clientes.model';
 import { MicroEmpresaService } from '../../../services/MicroEmpresas/microempresas.service';
+import { FacturasModel } from 'src/app/models/facturas.model';
+import { FacturasService } from 'src/app/services/Facturas/facturas.service';
 
 declare var google;
 
@@ -22,11 +24,14 @@ export class ListPage implements OnInit {
   iCliente = new ClientesModel();
   loading: any;
   IsActivate: boolean;
+  liFactura = new Array<FacturasModel>();
+  iFactura = new FacturasModel();
 
   constructor(public gservice: GeneralService,
               public service: MicroEmpresaService,
               private loadinCtrl: LoadingController,
               private modalCtrl: ModalController,
+              public fservice: FacturasService,
               private alertCtrl: AlertController) { }
 
   async ngOnInit() {
@@ -35,10 +40,62 @@ export class ListPage implements OnInit {
 
     this.getInfoMicroEmpresa();
 
+    this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
+    debugger;
+    if (this.liFactura === null) {
+      this.CrearPlanInicial().then(() => {
+        this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
+      });
+
+    } else {
+      if (this.liFactura.length === 0) {
+        this.CrearPlanInicial().then(() => {
+          this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');
+        });
+      }
+    }
+
   }
   
+  async CrearPlanInicial() {
+    let valid: any;
+    
+    let loading = this.loadinCtrl.create({
+      message: 'Espere un momento por favor.'
+    });
+    (await loading).present();
+
+    const token = await this.gservice.getStorage('token');
+    const IDCliente = await this.gservice.getStorage('IDCliente');
+
+    this.iFactura.IDPlan = 1;
+    this.iFactura.Valor_Plan_Actual = 0;
+    this.iFactura.IDCliente = IDCliente;
+
+    valid = await this.fservice.updateFactura(this.iFactura, token);
+
+    if (valid === true) {
+      this.gservice.setStorage('IDPlan', 1);
+
+      this.fservice.GetFacturasByCliente(token, IDCliente).then(fresult => {
+        this.liFactura = fresult as Array<FacturasModel>;
+        console.log('FACTURA', this.liFactura);
+        if (this.liFactura != null) {
+          if (this.liFactura.length > 0) {
+            this.gservice.setStorage('Factura', this.liFactura);
+          }
+        }
+      });
+
+    }
+
+    (await loading).dismiss();
+
+
+  }
 
   async modalcreate() {
+
     const modal = await this.modalCtrl.create({
       component: CreatePage,
       componentProps: {

@@ -3,7 +3,7 @@
     <ion-title>PQRS</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content>  
   <form (ngSubmit)="register(fReg)" #fReg="ngForm">
     <ion-list>
       <ion-item>
@@ -13,6 +13,7 @@
               [(ngModel)]="iPQRS.IDParametro" 
               placeholder="--seleccionar--"
               [selectedText]="DescripcionTipo"
+              (ngModelChange)="getInfoTipoPeticion()"
               required>
           <ion-select-option  *ngFor="let item of liParametros" value="{{item.IDParametro}}" style="width: 100%;">{{ item.Descripcion }}</ion-select-option>
         </ion-select>

@@ -39,17 +39,21 @@
         </ion-input>        
         <ion-icon name="print-outline" slot="start"></ion-icon>
       </ion-item> -->
+      <!-- (ionChange)="getSubCategorias(iMicroempresa.IDCategoria)" -->
+      <!-- [value]="iMicroempresa.IDCategoria" -->
       <ion-item>
         <ion-select
               name="IDCategoria"
               #IDCategoria
               [(ngModel)]="iMicroempresa.IDCategoria"
-              placeholder="--seleccionar--"
-              (ionChange)="getSubCategorias(iMicroempresa.IDCategoria)"
-              [selectedText]="DescripcionCategoria"
-              [value]="iMicroempresa.IDCategoria"
+              placeholder="--seleccionar--"              
+              [compareWith]="compareWith()"              
+              [selectedText]="DescripcionCategoria"              
               required>
-          <ion-select-option  *ngFor="let item of liCategorias" value="{{item.IDCategoria}}" style="width: 100%;">{{ item.Descripcion }}</ion-select-option>
+          <ion-select-option  *ngFor="let item of liCategorias" 
+                              value="{{item.IDCategoria}}" 
+                              style="width: 100%;">{{ item.Descripcion }}
+          </ion-select-option>          
         </ion-select>
         <ion-icon name="list-outline" slot="start"></ion-icon>
       </ion-item>

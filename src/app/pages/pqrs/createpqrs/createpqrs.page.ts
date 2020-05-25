@@ -126,6 +126,11 @@ export class CreatepqrsPage implements OnInit {
     }
   }
 
+  getInfoTipoPeticion() {
+    let item = this.liParametros.find(x => x.IDParametro === +this.iPQRS.IDParametro);    
+    this.iPQRS.TipoPeticion = item.Descripcion;
+  }
+
   async presentLoading(message: string) {
 
     this.loading = await this.loadinCtrl.create({
