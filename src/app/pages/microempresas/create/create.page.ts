@@ -238,6 +238,7 @@ export class CreatePage implements OnInit {
       this.loading.dismiss();
       this.GetDescriptionDyn(this.iMicroempresa.IDCategoria);
     });
+
   }
 
 
@@ -293,7 +294,7 @@ export class CreatePage implements OnInit {
     (await loading).dismiss();
 
     if (result == null) {
-      this.showAlert('No se cargaron las subcategorias, intente nuevamente');
+      //this.showAlert('No se cargaron las subcategorias, intente nuevamente');
     } else {
       this.liSubCategorias = result as SubCategoriaModel[];
     }

@@ -41,7 +41,7 @@ export class ListPage implements OnInit {
     this.getInfoMicroEmpresa();
 
     this.liFactura = await this.gservice.getStorage('Factura') as Array<FacturasModel>;
-    debugger;
+
     if (this.liFactura === null) {
       this.CrearPlanInicial().then(() => {
         this.showAlert('Tiene un plan Inicial de 30 días de prueba, si requiere más beneficios observe nuestros planes');

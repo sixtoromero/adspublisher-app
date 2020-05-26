@@ -38,17 +38,19 @@
               [(ngModel)]="iMicroempresa.Fax">
         </ion-input>        
         <ion-icon name="print-outline" slot="start"></ion-icon>
-      </ion-item> -->
-      <!-- (ionChange)="getSubCategorias(iMicroempresa.IDCategoria)" -->
+      </ion-item> -->      
+      
+      <!-- [compareWith]="compareWith()" -->
+      <!-- [selectedText]="DescripcionCategoria" -->
       <!-- [value]="iMicroempresa.IDCategoria" -->
+
       <ion-item>
         <ion-select
               name="IDCategoria"
               #IDCategoria
               [(ngModel)]="iMicroempresa.IDCategoria"
-              placeholder="--seleccionar--"              
-              [compareWith]="compareWith()"              
-              [selectedText]="DescripcionCategoria"              
+              placeholder="--seleccionar--"
+              (ionChange)="getSubCategorias(iMicroempresa.IDCategoria)"              
               required>
           <ion-select-option  *ngFor="let item of liCategorias" 
                               value="{{item.IDCategoria}}" 
