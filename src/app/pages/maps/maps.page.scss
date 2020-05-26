@@ -9,11 +9,38 @@ ion-content {
         opacity: 1;
       }
     }
-  }
+}
 
-  .my-custom-modal-css .modal-wrapper {
+#rpanel {
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#rpanel select, #rpanel input {
+  font-size: 15px;
+}
+
+#rpanel select {
+  width: 100%;
+}
+
+#rpanel i {
+  font-size: 12px;
+}
+#rpanel {
+  height: 100%;
+  float: right;
+  width: 390px;
+  overflow: auto;
+}
+
+.my-custom-modal-css .modal-wrapper {
     height: 20%;
     top: 80%;
     position: absolute; 
-    display: block;  
- }
+    display: block;    
+}
+
+
+
