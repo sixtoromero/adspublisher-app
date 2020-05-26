@@ -33,3 +33,6 @@ export const APIENDPOINT = {
     getCategoriasporMicroempresas: 'api/CategoriasPorMicroEmpresas/GetAllAsync'
 
 }
+export const APIKEYS = {
+    Google: 'AIzaSyArnxRnjhaHA94pbIuL_mjP-fZKBL0MD2E'
+}

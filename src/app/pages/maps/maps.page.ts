@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-//import { Marker, MarkerModel } from '../../models/marker.model';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ContentChild, TemplateRef } from '@angular/core';
 import { GeneralService } from '../../services/general.service';
 import { FilterPage } from './filter/filter.page';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, ToastController } from '@ionic/angular';
 import { MicroEmpresaModel } from '../../models/microempresa.model';
 import { MarkerModel } from 'src/app/models/marker.model';
 import { PositionModel } from 'src/app/models/position.model';
-
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GeocodeModel } from 'src/app/models/geocode.model';
-import { ConsoleReporter } from 'jasmine';
+import { RouteModel } from 'src/app/models/route.model';
 
 declare var google;
 
@@ -20,20 +18,47 @@ declare var google;
 })
 export class MapsPage implements OnInit {
 
-  apiKey: string = "AIzaSyArnxRnjhaHA94pbIuL_mjP";
+  @ViewChild("map", { read: ElementRef, static: true  }) private mapElement: ElementRef;
+  
+  readonly WalkMode: number = 1;
+  readonly CarMode: number = 2;
+
   map = null;
+  mapRouteRenderer = null;
+  markerInfoWindow = null;
   filtro: string;
   liMicroEmpresa = new Array<MicroEmpresaModel>();
   markers: MarkerModel[];
-
+  routeInitFlag: boolean = true;
+  currentLat: number;
+  currentLng: number;
+  targetLat: number;
+  targetLng: number;
+  
   constructor(gservice: GeneralService,
+              private toastController: ToastController,
               private modalCtrl: ModalController,
               private geolocation: Geolocation,
               public alertCtrl: AlertController) { }
-
-  ngOnInit() {
+  
+  ngOnInit(): void {
     this.filtro = 'filtro';
     this.getGeo();
+    // Initializer Route components
+    this.mapElement.nativeElement.addEventListener('click', () => {
+      console.log("click - mapElement");
+      var walkElement = document.getElementById("walk");
+      var carElement = document.getElementById("car");
+      console.log(walkElement);
+      console.log(carElement);
+      if (this.routeInitFlag && 
+        walkElement !== undefined && walkElement !== null && 
+        carElement !== undefined && carElement !== null) {
+          this.routeInitFlag = false;
+          walkElement.addEventListener('click', () => this.drawRoute(this.WalkMode));
+          carElement.addEventListener('click', () => this.drawRoute(this.CarMode));   
+      }
+    });
   }
 
   async modalfilter() {
@@ -77,7 +102,9 @@ export class MapsPage implements OnInit {
 
   getGeo() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.loadMap(13, resp.coords.latitude, resp.coords.longitude);
+      this.currentLat = resp.coords.latitude;
+      this.currentLng =  resp.coords.longitude;
+      this.loadMap(13, this.currentLat, this.currentLng);
      }).catch((error) => {
        console.log('Error getting location', error);
      });
@@ -122,52 +149,34 @@ export class MapsPage implements OnInit {
   }
 
   loadMap(zoom: number, lat: number, lng: number) {
-    
     // create a new map by passing HTMLElement
     const mapEle: HTMLElement = document.getElementById('map');
     // create LatLng object
     // Suba: 4.731198, -74.071963
     // Teusaquillo: 4.65838384628295, -74.09394073486328
-    //const myLatLng = {lat: 4.731198, lng: -74.071963};
     const myLatLng = {lat, lng};
     // create map
-    this.map = new google.maps.Map(mapEle, {
-      center: myLatLng,
-      zoom
-    });    
-
+    this.map = new google.maps.Map(mapEle, { center: myLatLng, zoom });    
     google.maps.event.addListenerOnce(this.map, 'idle', () => {
-      //this.renderMarkers();
-      mapEle.classList.add('show-map');
-      //this.renderMarkers();
-
+        mapEle.classList.add('show-map');
         this.markers = new Array<MarkerModel>();
         let imarker = new MarkerModel();
-
         imarker.position = new PositionModel();
-
         imarker.title = 'Mi ubicación';
         imarker.descripcion = 'Aquí estoy yo';
         imarker.position.lat = +lat;
         imarker.position.lng = +lng;
         imarker.icon = 'assets/images/location.png';
-
         this.markers.push(imarker);        
-
         this.renderMarkers();
-
         this.geoArea('Av Suba #28A - 68');
-
-        //this.validateLocationAsToZone(lat, lng);
-        this.validateLocationAsToZone(myLatLng.lat, myLatLng.lng);
-
+        this.validateLocationAsToZone(lat, lng);
     });
   }
 
   geoArea(address: string) {
     const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ address }, function(results, status) {
-      debugger
+    geocoder.geocode({ address }, (results, status) => {
       if (status === google.maps.GeocoderStatus.OK) {
           var result = results[0]; // el primer resultado es el más relevante
           console.log('info-geo', result);
@@ -183,23 +192,22 @@ export class MapsPage implements OnInit {
     // Example:
     // https://maps.googleapis.com/maps/api/geocode/json?latlng=4.6775432,-74.1747025&key=AIzaSyArnxRnjhaHA94pbIuL_mjP-fZKBL0MD2E
     const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({'location': {lat: lat, lng: lng}}, function(results: GeocodeModel[], status: string) {
+    geocoder.geocode({'location': {lat: lat, lng: lng}}, (results: GeocodeModel[], status: string) => {
       if (status === 'OK') {
         var isLocationValid = false;
         for (let r of results) {
           for (let address of r.address_components) {
             let lname = address.long_name.toLowerCase();
-            console.log("-----> " + lname);
             if (lname.indexOf("suba") !== -1) {
               isLocationValid = true;
             }
           }
         }
         if (!isLocationValid) {
-          window.alert('Usted no se encuentra en la zona de Suba');
+          this.showToastMessage('ADSPublisher', 'Usted no se encuentra en la zona de Suba');
         }
       } else {
-        window.alert('Hubo un problema para detectar su localizacion: ' + status);
+        this.showToastMessage('ADSPublisher', 'Hubo un problema para detectar su localizacion: ' + status);
       }
     });
   }
@@ -208,21 +216,48 @@ export class MapsPage implements OnInit {
     this.markers.forEach(marker => {
       this.addMarker(marker);
     });    
+  }
 
+  buildDefaultMarker(title: string, message: string) {
+    return '<div id="content">'+
+        '<div id="siteNotice">'+
+        '</div>'+
+        '<h1 id="firstHeading" class="firstHeading">' + title + '</h1>'+
+        '<div id="bodyContent">'+
+          '<p>'+
+          message +
+          '</p> '+
+        '</div>' +
+      '</div>';
+  }
+
+  buildRouteMarker(title: string, message: string) {
+    return '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<h1 id="firstHeading" class="firstHeading">' + title + '</h1>'+
+      '<div id="bodyContent">'+
+        '<p>'+
+        message +
+        '</p> '+
+        '<div class="maps-marker">'+
+          '<b>¿Cómo llegar desde aquí?</b>'+
+          '<div style="padding: 10px; display:flex; justify-content: space-between">' +
+            '<div id="walk" #walk tappable style="width:45%; height:50px; background:#A89932; text-align:center">' +
+              '<i style="margin-top: 20px" class="fas fa-walking"></i></div>'+
+            '<div id="car" #car tappable style="width:45%; height:50px; background:#A89D54; text-align:center">' +
+              '<i style="margin-top: 20px" class="fas fa-car"></i></div>'+
+          '</div>'+
+        '</div>' +
+      '</div>' +
+    '</div>';
   }
 
   addMarker(marker: MarkerModel) {
     
-    const contentString = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h1 id="firstHeading" class="firstHeading">' + marker.title + '</h1>'+
-      '<div id="bodyContent">'+
-      '<p>'+
-      marker.descripcion +
-      '</p> '+
-      '</div>' +
-      '</div>';
+    const contentString = marker.title.toLowerCase().indexOf("ubica") !== -1 ? 
+      this.buildDefaultMarker(marker.title, marker.descripcion) :
+      this.buildRouteMarker(marker.title, marker.descripcion);
 
     var infowindow = new google.maps.InfoWindow({
       content: contentString
@@ -235,11 +270,76 @@ export class MapsPage implements OnInit {
       title: marker.title
     });
 
-    mk.addListener('click', function() {
+    mk.addListener('click', () => {
+      if (this.markerInfoWindow) {
+        this.markerInfoWindow.close();
+      }
       infowindow.open(this.map, mk);
+      this.markerInfoWindow = infowindow;
+      this.targetLat = mk.position.lat();
+      this.targetLng = mk.position.lng();
+    });
+    infowindow.addListener('closeclick', () => {
+      this.routeInitFlag = true;
     });
 
-    return mk;
+   return mk;
   }
+
+  // === ROUTES ===
+
+  clearRoutes() {
+    if (this.mapRouteRenderer != null) {
+      this.mapRouteRenderer.setMap(null);
+      this.mapRouteRenderer = null;
+    }
+  }
+
+  drawRoute(mode: number) {
+    this.clearRoutes();
+    let ds = new google.maps.DirectionsService();
+    this.mapRouteRenderer = new google.maps.DirectionsRenderer();
+    this.mapRouteRenderer.setMap(this.map);
+    let toastTitle = mode == this.WalkMode ? 'Caminando' : 'Vehículo' ;
+    console.log(`${this.currentLat},${this.currentLng}`);
+    console.log(`${this.targetLat},${this.targetLng}`);
+    ds.route({
+      origin:`${this.currentLat},${this.currentLng}`,
+      destination:`${this.targetLat},${this.targetLng}`,
+      travelMode: mode == this.WalkMode ? google.maps.TravelMode.WALKING : google.maps.TravelMode.DRIVING
+    }, async (result, status) => {
+      console.log(result);
+      if (status == google.maps.DirectionsStatus.OK) {
+        var routeText = '';
+        let route = result as RouteModel;
+        for (let it of route.routes) {
+          for (let leg of it.legs) {
+            routeText += `Distancia: ${leg.distance.text}\nTiempo: ${leg.duration.text}\n`;
+          }  
+        }
+        this.mapRouteRenderer.setDirections(result);
+        await this.showToastMessage(`RUTA (${toastTitle})`, routeText);
+      } else {
+        window.alert(`No se pudo calcular la ruta`);
+      }
+    });
+  }
+
+  async showToastMessage(title:string, text:string) {
+    const toast = await this.toastController.create({
+      header: title,
+      message: text,
+      position: 'top',
+      buttons: [
+         {
+          text: 'OK',
+          role: 'cancel',
+          handler: () => {}
+        }
+      ]
+    });
+    toast.present();
+  }
+
 
 }
