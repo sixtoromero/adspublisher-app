@@ -4,6 +4,7 @@ export const APIENDPOINT = {
     SendMail: 'api/Clientes/SendMailAsync',
     getLogin: 'api/Clientes/GetLoginAsync',
     fileUpload: 'api/Clientes/FileUpload',
+    UpdateInfoCliente: 'api/Clientes/UpdateAsync',
     InsertMicroEmpresa: 'api/MicroEmpresas/InsertAsync',
     UpdateMicroEmpresa: 'api/MicroEmpresas/UpdateAsync',
     DeleteMicroEmpresa: 'api/MicroEmpresas/DeleteAsync',

@@ -23,8 +23,8 @@ export class LoginPage implements OnInit {
   iCliente = new ClientesModel();
   loading: any;
   iPlan = new PlanModel();
-  liFactura = new Array<FacturasModel>();
-  
+  liFactura = new Array<FacturasModel>();  
+
   constructor(private pservice: PlanesService,
     private service: ClientesService,
     private fservice: FacturasService,

@@ -104,6 +104,28 @@ import { Storage } from '@ionic/storage';
       });
     }
 
+    async updateinfo(cli: ClientesModel) {
+      
+      const token = await this.gservice.getStorage('token');
+
+      console.log('TOKEN', token);
+
+      return new Promise(resolve => {
+        this.post(APIENDPOINT.UpdateInfoCliente, cli, token)
+        .subscribe(response => {
+          if (response.IsSuccess) {
+            resolve(true);
+          } else {
+            console.log('Error Controlado', response.Message);
+            resolve(false);
+          }
+        }, error => {
+          console.log('Error', error.error);
+          resolve(false);
+        });
+      });
+    }
+
     sendMail(cli: ClientesModel, token: string) {
       return new Promise(resolve => {
         this.post(APIENDPOINT.SendMail, cli, token)
