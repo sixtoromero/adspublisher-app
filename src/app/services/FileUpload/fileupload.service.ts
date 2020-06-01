@@ -30,11 +30,9 @@ import { FileUploadAPIModel } from '../../models/fileuploadapi.model';
         }
 
         async subirImagen(file: FileUploadAPIModel, token: string) {
-            
             console.log('modelo', file);
-
             return new Promise(resolve => {
-              this.post(APIENDPOINT.fileUpload, file, token)
+              this.post(APIENDPOINT.fileUpload, file, token, true)
                 .subscribe(response => {
                     if (response.IsSuccess) {
                     resolve(true);
@@ -43,7 +41,7 @@ import { FileUploadAPIModel } from '../../models/fileuploadapi.model';
                     resolve(false);
                     }
                 }, error => {
-                    console.log('Error', error.error);
+                    console.log('Error', JSON.stringify(error.error));
                     resolve(false);
                 });
             });

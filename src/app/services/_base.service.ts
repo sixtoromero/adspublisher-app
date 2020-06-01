@@ -6,6 +6,9 @@ import { environment } from 'src/environments/environment';
 
 import { ResponseModel } from '../models/response.model';
 import { FileModel } from '../models/file.model';
+import { FileUploadService } from './FileUpload/fileupload.service';
+import { FileUploadAPIModel } from '../models/fileuploadapi.model';
+import { stringify } from 'querystring';
 
 export abstract class BaseService<TModel, TMasterModel>{
     public headers: HttpHeaders;
@@ -113,25 +116,38 @@ export abstract class BaseService<TModel, TMasterModel>{
                 }));
     }
 
-    post(endPoint: string, object: TModel, token: string = ""): Observable<ResponseModel<TModel[]>> {
-        
+    post(endPoint: string, object: TModel, token: string = "", isMultiPart: boolean = false): Observable<ResponseModel<TModel[]>> {
+        let formData = new FormData();
         if (token != "") {
             this.token = token;
             this.ApplicationAut(true);
         }
-
+        if (isMultiPart && object instanceof FileUploadAPIModel) {
+            this.headers.append('Content-Type', 'multipart/form-data;');
+            //this.headers.append('Accept', 'plain/text');
+            //this.headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
+            //this.headers.append('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, X-CSRF-Token');
+            formData.append('files', object.files);
+        }
         const apiURL = `${this._apiRoot}${endPoint}`;
-        
-        return this._httpClient.post(apiURL, object, { headers: this.headers })
+        console.log(" ===> HTTP Payload: " + JSON.stringify(isMultiPart ? formData : object));
+        console.log(" ===> HEADERS: " + JSON.stringify(this.headers));
+        console.log(" ===> URL: " + apiURL);
+        return this._httpClient.post(apiURL, isMultiPart ? formData : object, { headers: this.headers })
         .pipe(
             map(
                 (resp: ResponseModel<TModel>) => {
-                
-                this.responseModel.Data = resp.Data;
-                this.responseModel.IsSuccess = resp.IsSuccess;
-                this.responseModel.Message = resp.Message;
-
-                return this.responseModel;
+                    /*
+                    if (resp instanceof ResponseModel) {
+                        this.responseModel.Data = resp.Data;
+                        this.responseModel.IsSuccess = resp.IsSuccess;
+                        this.responseModel.Message = resp.Message;
+                    }
+                    */
+                   this.responseModel.Data = resp.Data;
+                   this.responseModel.IsSuccess = resp.IsSuccess;
+                   this.responseModel.Message = resp.Message;
+                   return this.responseModel;
             }));
     }
 
