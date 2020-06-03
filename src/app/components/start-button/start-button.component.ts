@@ -19,7 +19,6 @@ export class StartButtonComponent implements OnInit {
   }
 
   async navigateToLogin() {
-    await this.gservice.setStorage('IsSlide', true);
     this.router.navigate(['/login']);
   }
 }

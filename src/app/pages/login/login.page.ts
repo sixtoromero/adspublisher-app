@@ -45,8 +45,11 @@ export class LoginPage implements OnInit {
     this.gservice.IsHideMenu = false;
     await this.gservice.setStorage('IsHideMenu', false);
 
+    let IsSlide = await this.gservice.getStorage('IsSlide');
+    if (IsSlide === null || IsSlide === false) {
+      await this.gservice.setStorage('IsSlide', true);
+    }
     
-
   }
 
   async getLogin(freg: NgForm) {
@@ -135,13 +138,9 @@ export class LoginPage implements OnInit {
         });
 
         this.gservice.setStorage('MyPlan', this.iPlan);
-        
+
         this.router.navigate(['home']);
-
       });
-
-      
-
     });
     
   }
