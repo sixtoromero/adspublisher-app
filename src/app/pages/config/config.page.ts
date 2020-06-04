@@ -118,6 +118,7 @@ export class ConfigPage implements OnInit {
         // ---------
         this.imageData = imageData;
         this.image = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+        this.gservice.avatar = this.image;
         const fileTransfer: FileTransferObject = this.transfer.create();
         let options: FileUploadOptions = {
           fileKey: 'files',
@@ -126,8 +127,7 @@ export class ConfigPage implements OnInit {
         };
         fileTransfer.upload(this.imageData, "http://adspublisher.io.ngrok.io/api/Clientes/FileUpload", options)
           .then((data) => {
-            // success
-            alert("success");
+            console.log("Success: " + JSON.stringify(data));
           }, (err) => {
             this.showAlert("Hubo un problema al subir la foto al servidor: " + JSON.stringify(err));
         });

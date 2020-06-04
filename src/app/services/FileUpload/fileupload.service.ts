@@ -32,7 +32,7 @@ import { FileUploadAPIModel } from '../../models/fileuploadapi.model';
         async subirImagen(file: FileUploadAPIModel, token: string) {
             console.log('modelo', file);
             return new Promise(resolve => {
-              this.post(APIENDPOINT.fileUpload, file, token, true)
+              this.post(APIENDPOINT.fileUpload, file, token)
                 .subscribe(response => {
                     if (response.IsSuccess) {
                     resolve(true);
