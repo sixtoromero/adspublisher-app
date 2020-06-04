@@ -13,8 +13,7 @@ export const environment = {
   apiGatewayURL:'http://adspublisher.io.ngrok.io/',
   apiURL: 'http://adspublisher.io.ngrok.io/',
   BaseURL: 'http://adspublisher.io.ngrok.io/',
-  imageURL: 'http://adspublisher.io.ngrok.io/wwwroot/Upload'
-  //imageURL: 'http://adspublisher.io.ngrok.io/Upload/'
+  imageURL: 'http://adspublisher.io.ngrok.io/Upload/'
 
   //wwwroot\Upload
 };

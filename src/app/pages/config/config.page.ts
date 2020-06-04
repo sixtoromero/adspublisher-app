@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientesModel } from '../../models/clientes.model';
 import { GeneralService } from '../../services/general.service';
-import { NgForm } from '@angular/forms';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { File } from '@ionic-native/file';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ClientesService } from '../../services/Clientes/clientes.service';
@@ -19,8 +20,9 @@ export class ConfigPage implements OnInit {
   
   iCliente = new ClientesModel();
   position: boolean;
-  image: string;
   token: string;
+  image:any='';
+  imageData:any='';
 
   constructor(public gservice: GeneralService,
               private service: ClientesService,
@@ -28,6 +30,7 @@ export class ConfigPage implements OnInit {
               private modalCtrl: ModalController,
               private loadinCtrl: LoadingController,
               private alertCtrl: AlertController,
+              private transfer: FileTransfer,
               private camera: Camera) {
   }
 
@@ -82,9 +85,10 @@ export class ConfigPage implements OnInit {
   }
 
   camara() {
+    
     const options: CameraOptions = {
       quality: 60,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
       correctOrientation: true,
@@ -106,35 +110,30 @@ export class ConfigPage implements OnInit {
     };
   }
 
-  async procesarImagen(options: CameraOptions) {
-    
+  async procesarImagen(options: CameraOptions) { 
     this.camera.getPicture(options)
       .then((imageData) => {
-        this.image = 'data:image/jpeg;base64,' + imageData;
-        let fileupload = new FileUploadAPIModel();
-        fileupload.FileBase64 = this.image;
+        // Ref:
+        // https://github.com/bharathirajatut/ionic4/blob/master/camera-image-upload-example-php/home/home.page.ts
+        // ---------
+        this.imageData = imageData;
+        this.image = (<any>window).Ionic.WebView.convertFileSrc(imageData);
         this.gservice.avatar = this.image;
-        console.log('IMAGEN', fileupload.FileBase64);
-        this.fileuservice.subirImagen(fileupload, this.token )
-              .then(resp => {
-                console.log(resp);
-              }).catch(err  => {
-                console.log('PUTO ERROR', err);
-              });
+        const fileTransfer: FileTransferObject = this.transfer.create();
+        let options: FileUploadOptions = {
+          fileKey: 'files',
+          fileName: `profile-${Date.now()}.jpg`,
+          headers: {}
+        };
+        fileTransfer.upload(this.imageData, "http://adspublisher.io.ngrok.io/api/Clientes/FileUpload", options)
+          .then((data) => {
+            console.log("Success: " + JSON.stringify(data));
+          }, (err) => {
+            this.showAlert("Hubo un problema al subir la foto al servidor: " + JSON.stringify(err));
+        });
     }, (err) => {
-     // Handle error
+      this.showAlert("Hubo un problema con la cámara: " + JSON.stringify(err));
     });
-
-    // this.camera.getPicture(options).then((imageData) => {
-    //   // imageData is either a base64 encoded string or a file URI
-    //   // If it's base64 (DATA_URL):
-    //   const img = window.Ionic.WebView.convertFileSrc( imageData );
-    //   let resp = this.service.subirImagen(imageData);
-    //   //console.log(img);
-
-    // }, (err) => {
-    //  // Handle error
-    // });
   }
 
 
