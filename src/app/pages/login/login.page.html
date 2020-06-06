@@ -52,6 +52,12 @@
           <ion-button type="submit" expand="block" [disabled]="flogin.invalid">Ingresar</ion-button>                    
         </ion-col>
       </ion-row>
+      <ion-row>
+        <ion-col center text-center>
+          <!-- <ion-button color="primary">Ingresar</ion-button> -->
+          <ion-button color="success" (click)="getLoginInvitado()" expand="block">Invitado</ion-button>                    
+        </ion-col>
+      </ion-row>
     </ion-grid>    
     <!-- <ion-button expand="block" share="round" color="success">Login</ion-button> -->    
   </form>

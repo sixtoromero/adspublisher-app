@@ -39,9 +39,6 @@ export class LoginPage implements OnInit {
     
     await this.gservice.clearStorage();
 
-    this.iClientes.Correo = 'sixto.jose@gmail.com';
-    this.iClientes.Password = '51x70.j053';
-
     this.gservice.IsHideMenu = false;
     await this.gservice.setStorage('IsHideMenu', false);
 
@@ -50,6 +47,33 @@ export class LoginPage implements OnInit {
       await this.gservice.setStorage('IsSlide', true);
     }
     
+  }
+
+  async getLoginInvitado() {
+
+    this.gservice.clearStorage();
+
+    
+    let loading = this.loadinCtrl.create({
+      message: 'Por favor espere...'
+    });
+    (await loading).present();
+
+    const result = await this.service.loginInvitado();
+    (await loading).dismiss();
+        
+    if (result != null) {
+      
+      this.gservice.IsHideMenu = false;
+      this.gservice.setStorage('IsHideMenu', false);
+
+      this.gservice.setStorage('Invitado', true);
+      this.router.navigate(['home']);
+
+    } else {
+      this.showAlert('Usuario o contraseña incorrectos.');
+    }
+
   }
 
   async getLogin(freg: NgForm) {
@@ -74,8 +98,17 @@ export class LoginPage implements OnInit {
 
         this.gservice.IsHideMenu = true;
         this.gservice.setStorage('IsHideMenu', true);
-
+                
         this.gservice.avatar = environment.imageURL + this.iCliente.Foto;
+
+        this.gservice.setStorage('nombres', this.iCliente.Nombres);
+        this.gservice.setStorage('apellidos', this.iCliente.Apellidos);
+        this.gservice.setStorage('correo', this.iCliente.Correo);
+
+        this.gservice.avatar = this.iCliente.Foto;
+        this.gservice.nombres = this.iCliente.Nombres;
+        this.gservice.apellidos = this.iCliente.Apellidos;
+        this.gservice.correo = this.iCliente.Correo;
 
         //console.log('avatar', this.gservice.avatar);
         this.gservice.saveStorage('avatar', this.gservice.avatar);
@@ -138,7 +171,7 @@ export class LoginPage implements OnInit {
         });
 
         this.gservice.setStorage('MyPlan', this.iPlan);
-
+        this.gservice.setStorage('Invitado', false);
         this.router.navigate(['home']);
       });
     });

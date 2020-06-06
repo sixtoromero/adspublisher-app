@@ -14,17 +14,17 @@
       <ion-label>Ubicación</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="microempresas">
+    <ion-tab-button tab="microempresas" *ngIf="!Invitado">
       <ion-icon name="send"></ion-icon>
       <ion-label>Microempresas</ion-label>
     </ion-tab-button>
 
     
-    <ion-tab-button tab="pqrs">
+    <ion-tab-button tab="pqrs" *ngIf="!Invitado">
       <ion-icon name="chatbubbles"></ion-icon>
       <ion-label>PQRS</ion-label>
     </ion-tab-button>
-    
+        
   </ion-tab-bar>
 
 </ion-tabs>

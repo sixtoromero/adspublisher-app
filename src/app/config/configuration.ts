@@ -3,6 +3,7 @@ export const APIENDPOINT = {
     Insert: 'api/Clientes/InsertAsync',
     SendMail: 'api/Clientes/SendMailAsync',
     getLogin: 'api/Clientes/GetLoginAsync',
+    getLoginInvitado: 'api/Clientes/GetLoginInvitadoAsync',
     fileUpload: 'api/Clientes/FileUpload',
     UpdateInfoCliente: 'api/Clientes/UpdateAsync',
     InsertMicroEmpresa: 'api/MicroEmpresas/InsertAsync',

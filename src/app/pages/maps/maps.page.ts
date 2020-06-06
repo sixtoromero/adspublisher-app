@@ -61,6 +61,7 @@ export class MapsPage implements OnInit {
     });
   }
 
+  //Método para pintar los marcadores según el filtro realizado por el usuario
   async modalfilter() {
     const modal = await this.modalCtrl.create({
       component: FilterPage,
@@ -100,6 +101,7 @@ export class MapsPage implements OnInit {
 
   }
 
+  //Me permite capturar mi posición actual
   getGeo() {
     this.geolocation.getCurrentPosition().then((resp) => {
       this.currentLat = resp.coords.latitude;
@@ -110,6 +112,7 @@ export class MapsPage implements OnInit {
      });
   }
 
+  //Para presentar en la pantalla un alerta con opciones de Cancelar y Aceptar
   async presentAlert() {
     const alert = await this.alertCtrl.create({
       header: 'ADS Publisher',
@@ -156,7 +159,7 @@ export class MapsPage implements OnInit {
     // Teusaquillo: 4.65838384628295, -74.09394073486328
     const myLatLng = {lat, lng};
     // create map
-    this.map = new google.maps.Map(mapEle, { center: myLatLng, zoom });    
+    this.map = new google.maps.Map(mapEle, { center: myLatLng, zoom });
     google.maps.event.addListenerOnce(this.map, 'idle', () => {
         mapEle.classList.add('show-map');
         this.markers = new Array<MarkerModel>();
@@ -167,13 +170,13 @@ export class MapsPage implements OnInit {
         imarker.position.lat = +lat;
         imarker.position.lng = +lng;
         imarker.icon = 'assets/images/location.png';
-        this.markers.push(imarker);        
+        this.markers.push(imarker);
         this.renderMarkers();
         this.geoArea('Av Suba #28A - 68');
         this.validateLocationAsToZone(lat, lng);
     });
   }
-
+  
   geoArea(address: string) {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ address }, (results, status) => {
@@ -188,6 +191,7 @@ export class MapsPage implements OnInit {
     });
   }
 
+  //Se valida que la posición actual corresponda a localidad de suba.
   validateLocationAsToZone(lat: number, lng: number) {
     // Example:
     // https://maps.googleapis.com/maps/api/geocode/json?latlng=4.6775432,-74.1747025&key=AIzaSyArnxRnjhaHA94pbIuL_mjP-fZKBL0MD2E
@@ -211,13 +215,14 @@ export class MapsPage implements OnInit {
       }
     });
   }
-
+  //Rendereizar el array de los marcadores a agregar en el mapa.
   renderMarkers() {
     this.markers.forEach(marker => {
       this.addMarker(marker);
     });    
   }
 
+  //Método para pintar los marcadores modal
   buildDefaultMarker(title: string, message: string) {
     return '<div id="content">'+
         '<div id="siteNotice">'+
@@ -231,6 +236,7 @@ export class MapsPage implements OnInit {
       '</div>';
   }
 
+  //Método para pintar los marcadores modal
   buildRouteMarker(title: string, message: string) {
     return '<div id="content">'+
       '<div id="siteNotice">'+
@@ -253,6 +259,7 @@ export class MapsPage implements OnInit {
     '</div>';
   }
 
+  //Agrega el marcardor en el mapa 
   addMarker(marker: MarkerModel) {
     
     const contentString = marker.title.toLowerCase().indexOf("ubica") !== -1 ? 
@@ -301,8 +308,8 @@ export class MapsPage implements OnInit {
     this.mapRouteRenderer = new google.maps.DirectionsRenderer();
     this.mapRouteRenderer.setMap(this.map);
     let toastTitle = mode == this.WalkMode ? 'Caminando' : 'Vehículo' ;
-    console.log(`${this.currentLat},${this.currentLng}`);
-    console.log(`${this.targetLat},${this.targetLng}`);
+    //console.log(`${this.currentLat},${this.currentLng}`);
+    //console.log(`${this.targetLat},${this.targetLng}`);
     ds.route({
       origin:`${this.currentLat},${this.currentLng}`,
       destination:`${this.targetLat},${this.targetLng}`,

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { GeneralService } from '../services/general.service';
 
 @Component({
   selector: 'app-home',
@@ -8,13 +9,23 @@ import { MenuController } from '@ionic/angular';
 })
 export class HomePage implements OnInit {
 
-  constructor(private menuCtrl: MenuController) { }
+  Invitado: boolean;
 
-  ngOnInit() {
+  constructor(private menuCtrl: MenuController, private gservice: GeneralService) { }
+
+  
+
+  async ngOnInit() {
+    //this.gservice.setStorage('Invitado', true);
+    
+    this.Invitado = await this.gservice.getStorage('Invitado');
+
   }
 
   toggleMenu() {
-    this.menuCtrl.toggle();
+    if(!this.Invitado) {
+      this.menuCtrl.toggle();
+    }
   }
 
 }

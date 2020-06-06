@@ -13,8 +13,8 @@
           <img [src]="service.avatar">
         </ion-avatar>
         <ion-label>
-          <h2>{{cliente.Nombres}} {{cliente.Apellidos}}</h2>
-          <p>{{cliente.Correo}}</p>
+          <h2>{{service.nombres}} {{service.apellidos}}</h2>
+          <p>{{service.correo}}</p>
         </ion-label>
       </ion-item>
       <ion-menu-toggle *ngFor="let c of menuOpts | async" [routerLink]="c.redirectTo">

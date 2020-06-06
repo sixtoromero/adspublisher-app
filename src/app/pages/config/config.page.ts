@@ -8,6 +8,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ClientesService } from '../../services/Clientes/clientes.service';
 import { FileUploadService } from '../../services/FileUpload/fileupload.service';
 import { FileUploadAPIModel } from '../../models/fileuploadapi.model';
+import { environment } from 'src/environments/environment';
 
 declare var window: any;
 
@@ -23,6 +24,7 @@ export class ConfigPage implements OnInit {
   token: string;
   image:any='';
   imageData:any='';
+  IDCliente: number;
 
   constructor(public gservice: GeneralService,
               private service: ClientesService,
@@ -42,7 +44,7 @@ export class ConfigPage implements OnInit {
 
     this.iCliente = await this.gservice.getStorage('InfoCliente') as ClientesModel;
     this.token = await this.gservice.getStorage('token');
-
+    this.IDCliente = await this.gservice.getStorage('IDCliente');
   }
 
   getGeolocation() {
@@ -63,6 +65,20 @@ export class ConfigPage implements OnInit {
     (await loading).dismiss();
 
     if (valid === true) {
+      
+      
+      this.gservice.avatar = environment.imageURL + this.iCliente.Foto;
+      this.gservice.nombres = this.iCliente.Nombres;
+      this.gservice.apellidos = this.iCliente.Apellidos;
+      this.gservice.correo = this.iCliente.Correo;
+
+      this.gservice.setStorage('nombres', this.iCliente.Nombres);
+      this.gservice.setStorage('apellidos', this.iCliente.Apellidos);
+      this.gservice.setStorage('correo', this.iCliente.Correo);
+
+      this.gservice.saveStorage('avatar', this.gservice.avatar);
+      this.gservice.saveStorage('InfoCliente', this.iCliente);
+
       this.showAlert('Actualización completada');
     } else {
       this.showAlert('Ha ocurrido un inconveniente por favor intente nuevamente.');
@@ -121,9 +137,9 @@ export class ConfigPage implements OnInit {
         this.gservice.avatar = this.image;
         const fileTransfer: FileTransferObject = this.transfer.create();
         let options: FileUploadOptions = {
-          fileKey: 'files',
+          fileKey: 'files',          
           fileName: `profile-${Date.now()}.jpg`,
-          headers: {}
+          headers: { IDCliente: this.IDCliente }
         };
         fileTransfer.upload(this.imageData, "http://adspublisher.io.ngrok.io/api/Clientes/FileUpload", options)
           .then((data) => {

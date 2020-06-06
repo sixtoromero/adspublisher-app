@@ -67,6 +67,31 @@ import { Storage } from '@ionic/storage';
       });
     }
 
+    loginInvitado() {
+
+      return new Promise(resolve => {
+        this.post(APIENDPOINT.getLoginInvitado, null)
+        .subscribe(response => {
+          if (response.IsSuccess) {
+            
+            this.gservice.saveStorage('token', response.Data);
+            resolve(response.Data);
+          } else {
+            console.log('Error Controlado', response.Message);
+            this.token = null;
+            this.gservice.clearStorage();
+            resolve(null);
+
+          }
+        }, error => {
+          console.log('Error', error.error);
+          this.token = null;
+          this.gservice.clearStorage();
+          resolve(null);
+        });
+      });
+    }
+
     getClientesByID(_token: string, IDCliente: number) {
 
       return new Promise( resolve => {

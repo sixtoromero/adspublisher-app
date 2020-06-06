@@ -101,8 +101,8 @@ export class ListPage implements OnInit {
     let valid: any;
 
     this.payPal.init({
-      PayPalEnvironmentProduction: 'AViS202nQP2glu8nQRwqaZtX23CuSS2rF0ehZSr7WwmjwaVlKxgOxFh_XRXjqxouw2dheqw7YwFBLnFl',
-      PayPalEnvironmentSandbox: 'AViS202nQP2glu8nQRwqaZtX23CuSS2rF0ehZSr7WwmjwaVlKxgOxFh_XRXjqxouw2dheqw7YwFBLnFl'
+      PayPalEnvironmentProduction: 'ATVTTZUYdcFd0ph-Cm-6DCcqW1cWvpxIrgI32ZgsrgfBXg9ovs2biRITHg5IIqgyQzbAV17QOyYbXthi',
+      PayPalEnvironmentSandbox: 'AfJrwpKTcAEspjXnmxMXDjGhouYoXn4F9b2ZjZqSnlBBKVvfStB1x8HZfZ6Ef3Cen59mcU6kTZ0YK6Nd'
     }).then(() => {
       // Environments: PayPalEnvironmentNoNetwork, PayPalEnvironmentSandbox, PayPalEnvironmentProduction
       //Ads-Publisher	

@@ -21,6 +21,10 @@ import { Storage } from '@ionic/storage';
 
     token: string;
 
+    nombres: string;
+    apellidos: string;
+    correo: string;
+
     constructor(protected http: HttpClient,
         private loadinCtrl: LoadingController,
         private storage: Storage) { }

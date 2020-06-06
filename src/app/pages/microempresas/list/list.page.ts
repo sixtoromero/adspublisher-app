@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { MicroEmpresaModel } from '../../../models/microempresa.model';
 import { GeneralService } from '../../../services/general.service';
 //import { Marker } from '../../../models/marker.model';
@@ -16,7 +16,7 @@ declare var google;
   templateUrl: './list.page.html',
   styleUrls: ['./list.page.scss'],
 })
-export class ListPage implements OnInit {
+export class ListPage implements OnInit, OnChanges {
 
   iMicroEmpresa = new MicroEmpresaModel();
   liMicroEmpresa = new Array<MicroEmpresaModel>();
@@ -33,6 +33,10 @@ export class ListPage implements OnInit {
               private modalCtrl: ModalController,
               public fservice: FacturasService,
               private alertCtrl: AlertController) { }
+
+  async ngOnChanges() {
+    await this.getInfoMicroEmpresa();
+  }
 
   async ngOnInit() {
     this.gservice.avatar = await this.gservice.getStorage('avatar');
