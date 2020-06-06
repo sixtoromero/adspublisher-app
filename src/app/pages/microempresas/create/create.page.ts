@@ -164,7 +164,7 @@ export class CreatePage implements OnInit {
     // create a new map by passing HTMLElement
     const mapEle: HTMLElement = document.getElementById('map');
     // create LatLng object
-    const myLatLng = {lat: 6.2511208, lng: -75.5761448};
+    const myLatLng = {lat: 4.714527, lng: -74.0748661};
     // create map
     this.map = new google.maps.Map(mapEle, {
       center: myLatLng,
