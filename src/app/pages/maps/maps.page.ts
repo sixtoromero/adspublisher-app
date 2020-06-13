@@ -77,7 +77,10 @@ export class MapsPage implements OnInit {
 
     if (data["ModalProcess"]) {
 
-      this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];      
+      //this.getGeo();
+      this.clearRoutes();
+
+      this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];
 
       this.markers = new Array<MarkerModel>();
 
@@ -216,7 +219,7 @@ export class MapsPage implements OnInit {
     });
   }
   //Rendereizar el array de los marcadores a agregar en el mapa.
-  renderMarkers() {
+  renderMarkers() {    
     this.markers.forEach(marker => {
       this.addMarker(marker);
     });    
