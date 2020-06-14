@@ -222,7 +222,7 @@ export class MapsPage implements OnInit {
     });
   }
   //Rendereizar el array de los marcadores a agregar en el mapa.
-  renderMarkers() {
+  renderMarkers() {    
     this.markers.forEach(marker => {
       var mk = this.addMarker(marker);
       mk.setMap(this.map);

@@ -71,7 +71,7 @@ export class LoginPage implements OnInit {
       this.router.navigate(['home']);
 
     } else {
-      this.showAlert('Usuario o contraseña incorrectos.');
+      this.showAlert('Ha ocurrido un inconveniente en el inicio de sesión');
     }
 
   }

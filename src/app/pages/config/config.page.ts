@@ -141,7 +141,7 @@ export class ConfigPage implements OnInit {
           fileName: `profile-${Date.now()}.jpg`,
           headers: { IDCliente: this.IDCliente }
         };
-        fileTransfer.upload(this.imageData, "http://adspublisher.io.ngrok.io/api/Clientes/FileUpload", options)
+        fileTransfer.upload(this.imageData, "http://ads-publisher.io.ngrok.io/api/Clientes/FileUpload", options)
           .then((data) => {
             console.log("Success: " + JSON.stringify(data));
           }, (err) => {
