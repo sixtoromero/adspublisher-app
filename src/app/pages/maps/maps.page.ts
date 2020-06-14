@@ -35,7 +35,7 @@ export class MapsPage implements OnInit {
   targetLat: number;
   targetLng: number;
   
-  constructor(gservice: GeneralService,
+  constructor(private gservice: GeneralService,
               private toastController: ToastController,
               private modalCtrl: ModalController,
               private geolocation: Geolocation,
@@ -45,6 +45,7 @@ export class MapsPage implements OnInit {
     this.filtro = 'filtro';
     this.getGeo();
     // Initializer Route components
+  
     this.mapElement.nativeElement.addEventListener('click', () => {
       console.log("click - mapElement");
       var walkElement = document.getElementById("walk");
@@ -76,27 +77,20 @@ export class MapsPage implements OnInit {
     const { data } = await modal.onDidDismiss();
 
     if (data["ModalProcess"]) {
-
       this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];      
-
       this.markers = new Array<MarkerModel>();
-
       this.liMicroEmpresa.forEach(item => {
-
         let imarker = new MarkerModel();
         imarker.position = new PositionModel();
-
         imarker.title = item.Nombre;
         imarker.descripcion = item.Descripcion;
         imarker.position.lat = +item.Latitud;
         imarker.position.lng = +item.Longitud;
-
         this.markers.push(imarker);
-
       });
-
-      this.renderMarkers();
-
+      await this.gservice.removeStorage("filter-markers");
+      await this.gservice.saveStorage("filter-markers", JSON.stringify(this.markers));
+      window.location.reload();
     }
 
   }
@@ -160,8 +154,10 @@ export class MapsPage implements OnInit {
     const myLatLng = {lat, lng};
     // create map
     this.map = new google.maps.Map(mapEle, { center: myLatLng, zoom });
-    google.maps.event.addListenerOnce(this.map, 'idle', () => {
+    google.maps.event.addListenerOnce(this.map, 'idle', async () => {
         mapEle.classList.add('show-map');
+        // Draw map and markers
+        // Curren Location
         this.markers = new Array<MarkerModel>();
         let imarker = new MarkerModel();
         imarker.position = new PositionModel();
@@ -171,7 +167,17 @@ export class MapsPage implements OnInit {
         imarker.position.lng = +lng;
         imarker.icon = 'assets/images/location.png';
         this.markers.push(imarker);
+        // Show markers result as the previous filter
+        var previousMarkersStr = await this.gservice.getStorage("filter-markers");
+        if (previousMarkersStr !== undefined && previousMarkersStr !== null) {
+          var previousMarkers = JSON.parse(previousMarkersStr);
+          previousMarkers.forEach ((mk: MarkerModel) => {
+            this.markers.push(mk);
+          });
+        }
+        // Display Markers
         this.renderMarkers();
+        // Validate if person is located at Suba
         this.geoArea('Av Suba #28A - 68');
         this.validateLocationAsToZone(lat, lng);
     });
@@ -218,7 +224,8 @@ export class MapsPage implements OnInit {
   //Rendereizar el array de los marcadores a agregar en el mapa.
   renderMarkers() {
     this.markers.forEach(marker => {
-      this.addMarker(marker);
+      var mk = this.addMarker(marker);
+      mk.setMap(this.map);
     });    
   }
 
@@ -273,6 +280,7 @@ export class MapsPage implements OnInit {
     const mk = new google.maps.Marker({
       position: marker.position,
       map: this.map,
+      animation: google.maps.Animation.DROP,
       icon: marker.icon,
       title: marker.title
     });
