@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ContentChild, TemplateRef } from '@angular/core';
 import { GeneralService } from '../../services/general.service';
 import { FilterPage } from './filter/filter.page';
-import { ModalController, AlertController, ToastController } from '@ionic/angular';
+import { ModalController, AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { MicroEmpresaModel } from '../../models/microempresa.model';
 import { MarkerModel } from 'src/app/models/marker.model';
 import { PositionModel } from 'src/app/models/position.model';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GeocodeModel } from 'src/app/models/geocode.model';
 import { RouteModel } from 'src/app/models/route.model';
+import { HistorialVisitasService } from '../../services/historialvisitas/historialvisitas.service';
+import { HistorialRegistroModel } from 'src/app/models/historialregistro.model';
 
 declare var google;
 
@@ -36,28 +38,28 @@ export class MapsPage implements OnInit {
   targetLng: number;
   
   constructor(private gservice: GeneralService,
+              private shistorial: HistorialVisitasService,
               private toastController: ToastController,
               private modalCtrl: ModalController,
               private geolocation: Geolocation,
+              private loadinCtrl: LoadingController,
               public alertCtrl: AlertController) { }
   
-  ngOnInit(): void {
+  async ngOnInit() {
     this.filtro = 'filtro';
     this.getGeo();
     // Initializer Route components
-  
+    //MIRAR ACÁ COMO MANDAR EL ID DE LA EMPRESA
     this.mapElement.nativeElement.addEventListener('click', () => {
-      console.log("click - mapElement");
-      var walkElement = document.getElementById("walk");
-      var carElement = document.getElementById("car");
-      console.log(walkElement);
-      console.log(carElement);
-      if (this.routeInitFlag && 
+      const walkElement = document.getElementById("walk");
+      const carElement = document.getElementById("car");
+      if (this.routeInitFlag &&
         walkElement !== undefined && walkElement !== null && 
         carElement !== undefined && carElement !== null) {
           this.routeInitFlag = false;
           walkElement.addEventListener('click', () => this.drawRoute(this.WalkMode));
-          carElement.addEventListener('click', () => this.drawRoute(this.CarMode));   
+          carElement.addEventListener('click', () => this.drawRoute(this.CarMode));
+          //debugger;
       }
     });
   }
@@ -77,12 +79,17 @@ export class MapsPage implements OnInit {
     const { data } = await modal.onDidDismiss();
 
     if (data["ModalProcess"]) {
-      this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];      
+      
+      this.liMicroEmpresa = data["GetMicroEmpresa"] as MicroEmpresaModel[];
+      
+      //console.log('MicroEmpresa Filtro', this.liMicroEmpresa);
+
       this.markers = new Array<MarkerModel>();
       this.liMicroEmpresa.forEach(item => {
         let imarker = new MarkerModel();
         imarker.position = new PositionModel();
-        imarker.title = item.Nombre;
+        imarker.title = item.Nombre; // + '-' + item.IDMicroEmpresa;
+        imarker.IDMicroEmpresa =  item.IDMicroEmpresa.toString();
         imarker.descripcion = item.Descripcion;
         imarker.position.lat = +item.Latitud;
         imarker.position.lng = +item.Longitud;
@@ -231,6 +238,7 @@ export class MapsPage implements OnInit {
 
   //Método para pintar los marcadores modal
   buildDefaultMarker(title: string, message: string) {
+
     return '<div id="content">'+
         '<div id="siteNotice">'+
         '</div>'+
@@ -244,11 +252,12 @@ export class MapsPage implements OnInit {
   }
 
   //Método para pintar los marcadores modal
-  buildRouteMarker(title: string, message: string) {
+  buildRouteMarker(title: string, message: string, IDMicroEmpresa: string) {    
     return '<div id="content">'+
       '<div id="siteNotice">'+
       '</div>'+
       '<h1 id="firstHeading" class="firstHeading">' + title + '</h1>'+
+      '<span id="firstHeadinghide" class="firstHeadinghide" style="opacity: 0;">' + IDMicroEmpresa + '</span>'+
       '<div id="bodyContent">'+
         '<p>'+
         message +
@@ -267,11 +276,10 @@ export class MapsPage implements OnInit {
   }
 
   //Agrega el marcardor en el mapa 
-  addMarker(marker: MarkerModel) {
-    
-    const contentString = marker.title.toLowerCase().indexOf("ubica") !== -1 ? 
+  addMarker(marker: MarkerModel) {      
+      const contentString = marker.title.toLowerCase().indexOf("ubica") !== -1 ?
       this.buildDefaultMarker(marker.title, marker.descripcion) :
-      this.buildRouteMarker(marker.title, marker.descripcion);
+      this.buildRouteMarker(marker.title, marker.descripcion, marker.IDMicroEmpresa);
 
     var infowindow = new google.maps.InfoWindow({
       content: contentString
@@ -310,20 +318,19 @@ export class MapsPage implements OnInit {
     }
   }
 
-  drawRoute(mode: number) {
+  async drawRoute(mode: number) {
     this.clearRoutes();
     let ds = new google.maps.DirectionsService();
     this.mapRouteRenderer = new google.maps.DirectionsRenderer();
     this.mapRouteRenderer.setMap(this.map);
     let toastTitle = mode == this.WalkMode ? 'Caminando' : 'Vehículo' ;
-    //console.log(`${this.currentLat},${this.currentLng}`);
-    //console.log(`${this.targetLat},${this.targetLng}`);
+    let IDMicroEmpresa = document.getElementsByClassName("firstHeadinghide")[0].innerHTML;
+    
     ds.route({
       origin:`${this.currentLat},${this.currentLng}`,
       destination:`${this.targetLat},${this.targetLng}`,
       travelMode: mode == this.WalkMode ? google.maps.TravelMode.WALKING : google.maps.TravelMode.DRIVING
     }, async (result, status) => {
-      console.log(result);
       if (status == google.maps.DirectionsStatus.OK) {
         var routeText = '';
         let route = result as RouteModel;
@@ -334,13 +341,37 @@ export class MapsPage implements OnInit {
         }
         this.mapRouteRenderer.setDirections(result);
         await this.showToastMessage(`RUTA (${toastTitle})`, routeText);
+        
+        //console.log('AQUI HISTORIAL');
+
+        let loading = this.loadinCtrl.create({
+          message: 'Por favor espere...'
+        });
+        (await loading).present();
+
+        let iHistorial = new HistorialRegistroModel();
+
+        let IDUsuario = await this.gservice.getStorage('IDUsuario');
+        
+        iHistorial.IDMicroempresa = +IDMicroEmpresa;
+        iHistorial.Descripcion = 'Ruta: ' + toastTitle + ' ' +  routeText;
+        iHistorial.IDUsuario =  +IDUsuario;
+        iHistorial.FechaCreacion = new Date();
+
+        const token = await this.gservice.getStorage('token');
+        const resp = await this.shistorial.insertHistorialVisitas(iHistorial, token);
+
+        (await loading).dismiss();
+
+        console.log('HISTORIAL VISITA', resp);
+
       } else {
         window.alert(`No se pudo calcular la ruta`);
       }
     });
   }
 
-  async showToastMessage(title:string, text:string) {
+  async showToastMessage(title: string, text: string) {
     const toast = await this.toastController.create({
       header: title,
       message: text,

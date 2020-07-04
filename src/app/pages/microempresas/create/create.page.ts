@@ -330,7 +330,7 @@ export class CreatePage implements OnInit {
       let Latitud = 0;
       let Longitud = 0;
     
-      let address = this.iMicroempresa.Direccion + ' Medellín, Antioquia';
+      let address = this.iMicroempresa.Direccion + ' Bogotá, Suba';
 
       var promise = new Promise(function(resolve, reject) {
 

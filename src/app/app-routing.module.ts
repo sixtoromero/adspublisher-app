@@ -51,6 +51,14 @@ const routes: Routes = [
   {
     path: 'logout',
     loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+  },
+  {
+    path: 'create',
+    loadChildren: () => import('./pages/historialvisitas/create/create.module').then( m => m.CreatePageModule)
+  },
+  {
+    path: 'list',
+    loadChildren: () => import('./pages/historialvisitas/list/list.module').then( m => m.ListPageModule)
   }
 ];
 

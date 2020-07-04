@@ -14,4 +14,6 @@ export class ClientesModel {
 
     public IDMicroempresa: number;
     public IDPlan: number;
+
+    public IDUsuario: number;
 }

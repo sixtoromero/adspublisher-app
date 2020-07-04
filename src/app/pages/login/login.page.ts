@@ -68,6 +68,8 @@ export class LoginPage implements OnInit {
       this.gservice.setStorage('IsHideMenu', false);
 
       this.gservice.setStorage('Invitado', true);
+      this.gservice.setStorage('IDUsuario', -1);
+
       this.router.navigate(['home']);
 
     } else {
@@ -95,6 +97,9 @@ export class LoginPage implements OnInit {
         
         this.gservice.saveStorage('InfoCliente', this.iCliente);
         this.gservice.saveStorage('IDCliente', this.iCliente.IDCliente);
+        this.gservice.setStorage('IDUsuario', this.iCliente.IDUsuario);
+        debugger;
+        this.gservice.setStorage('IDMicroempresa', this.iCliente.IDMicroempresa);
 
         this.gservice.IsHideMenu = true;
         this.gservice.setStorage('IsHideMenu', true);

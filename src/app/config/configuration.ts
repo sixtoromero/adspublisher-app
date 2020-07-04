@@ -28,6 +28,8 @@ export const APIENDPOINT = {
     UpdateFactura: 'api/Facturas/UpdateAsync',
     getPlanes: 'api/Planes/GetAllAsync',
     getPlan: 'api/Planes/GetAsync',
+    insertHistorialRegistro: 'api/HistorialRegistro/InsertAsync',
+    getHistorialByID: 'api/HistorialRegistro/GetAllAsync',
     insertHistorialPagos: 'api/HistorialPagos/InsertAsync',
     getHistorialPagos: 'api/HistorialPagos/GetAllAsync',
     getCategorias: 'api/Categorias/GetAllAsync',
