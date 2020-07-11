@@ -27,7 +27,6 @@ import { PayPal } from '@ionic-native/paypal/ngx';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 
-
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

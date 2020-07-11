@@ -43,9 +43,9 @@ import { HistorialRegistroModel } from 'src/app/models/historialregistro.model';
       });
     }
 
-    GetHistorialByCliente(token: string, IDCliente: number) {
+    GetHistorialByUsuario(token: string, IDUsuario: number) {
         return new Promise( resolve => {
-          this.get(APIENDPOINT.getHistorialByID + '?ID=' + IDCliente, true, token)
+          this.get(APIENDPOINT.getHistorialByID + '?ID=' + IDUsuario, true, token)
             .subscribe(resp => {
               if (resp.IsSuccess) {
                 resolve(resp.Data);

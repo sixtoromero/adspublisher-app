@@ -36,8 +36,7 @@ export abstract class BaseService<TModel, TMasterModel>{
     }
 
     get(endPoint: string, isAut: boolean=false, _token: string): Observable<ResponseModel<TModel>> {
-        
-        
+
         const apiURL = `${this._apiRoot}${endPoint}`;
         this.token = _token;
         

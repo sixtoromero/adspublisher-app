@@ -98,7 +98,7 @@ export class LoginPage implements OnInit {
         this.gservice.saveStorage('InfoCliente', this.iCliente);
         this.gservice.saveStorage('IDCliente', this.iCliente.IDCliente);
         this.gservice.setStorage('IDUsuario', this.iCliente.IDUsuario);
-        debugger;
+        //debugger;
         this.gservice.setStorage('IDMicroempresa', this.iCliente.IDMicroempresa);
 
         this.gservice.IsHideMenu = true;

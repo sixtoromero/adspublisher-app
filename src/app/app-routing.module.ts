@@ -57,7 +57,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/historialvisitas/create/create.module').then( m => m.CreatePageModule)
   },
   {
-    path: 'list',
+    path: 'listvisitas',
     loadChildren: () => import('./pages/historialvisitas/list/list.module').then( m => m.ListPageModule)
   }
 ];

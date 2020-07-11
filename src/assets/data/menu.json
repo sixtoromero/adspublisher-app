@@ -26,7 +26,7 @@
     {
         "icon": "calendar",
         "name": "Historial de Visitas",
-        "redirectTo": "/listhistorialpagos",
+        "redirectTo": "/listvisitas",
         "isvisible": true
     }
 ]

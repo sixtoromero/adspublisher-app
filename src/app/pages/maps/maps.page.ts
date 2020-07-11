@@ -59,7 +59,7 @@ export class MapsPage implements OnInit {
           this.routeInitFlag = false;
           walkElement.addEventListener('click', () => this.drawRoute(this.WalkMode));
           carElement.addEventListener('click', () => this.drawRoute(this.CarMode));
-          //debugger;
+          ////debugger;
       }
     });
   }

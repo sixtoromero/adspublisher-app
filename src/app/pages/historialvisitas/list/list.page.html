@@ -1,9 +1,46 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>list</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Paypal - Plan
+    </ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-
+  <ion-list>
+    <ion-item *ngFor="let item of liHistorialVisitas" class="list-trans">    
+      <!-- <ion-icon slot="start" name="cash"></ion-icon> -->
+      <ion-grid style="width: 100%;">
+        <ion-row>
+          <ion-col>
+            <strong>Microempresa: </strong> <br>
+            {{ item.MicroEmpresa }}
+          </ion-col>
+          <ion-col>
+            <strong>Descripción: </strong> <br>
+            {{ item.DescripcionEmpresa }}
+          </ion-col>
+        </ion-row>        
+        <ion-row>
+          <ion-col>
+            <strong>Fecha Visita: </strong> <br>
+            {{ item.FechaCreacion | date: 'dd/MM/yyyy' }}
+          </ion-col>
+          <ion-col>
+            <strong>Recorrido: </strong> <br>
+            {{ item.Descripcion }}
+          </ion-col>          
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <br>     
+      <!-- <hr style="border-top: 1px solid red;"/> -->
+    </ion-item>
+  </ion-list>
 </ion-content>

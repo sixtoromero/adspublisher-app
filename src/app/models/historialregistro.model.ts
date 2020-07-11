@@ -4,4 +4,6 @@ export class HistorialRegistroModel {
     public Descripcion: string;
     public IDUsuario: number;
     public FechaCreacion: Date;
+    public MicroEmpresa: string;
+    public DescripcionEmpresa: string;
 }
